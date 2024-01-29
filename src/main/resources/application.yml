@@ -3,6 +3,7 @@ spring:
     url: jdbc:mysql://globalstudents-db.cftlev9uds9u.ap-northeast-2.rds.amazonaws.com:3306/globalstudentsdb
     username: root
     password: globalstudents
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
