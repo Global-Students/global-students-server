@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "country")
+@Table(name = "language")
 public class LanguageEntity {
 
     @Id
