@@ -1,5 +1,6 @@
 package com.example.globalStudents.domain.user.entity;
 
+import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
 import com.example.globalStudents.domain.user.enums.UserRole;
 import com.example.globalStudents.domain.user.enums.UserStatus;
 import jakarta.persistence.*;
@@ -79,4 +80,7 @@ public class UserEntity {
     @OneToOne
     @JoinColumn(name="language_id")
     private LanguageEntity language;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserImageEntity> userImageEntityList = new ArrayList<>();
 }
