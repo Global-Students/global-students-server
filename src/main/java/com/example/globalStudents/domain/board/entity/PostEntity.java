@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "post")
 public class PostEntity {
 
     @Id
@@ -59,15 +60,15 @@ public class PostEntity {
     private BoardEntity board;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostImageEntity> postImageEntityList = new ArrayList<>();
+    private List<PostImageEntity> postImageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "id.post", cascade = CascadeType.ALL)
-    private  List<UserPostReactionEntity> userPostReactionEntityList = new ArrayList<>();
+    private  List<UserPostReactionEntity> userPostReactionList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<ReportEntity> reportEntityList = new ArrayList<>();
+    private List<ReportEntity> reportList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<CommentEntity> commentEntityList = new ArrayList<>();
+    private List<CommentEntity> commentList = new ArrayList<>();
 
 }

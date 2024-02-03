@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "board")
 public class BoardEntity {
 
     @Id
@@ -36,7 +37,7 @@ public class BoardEntity {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PostEntity> postEntityList = new ArrayList<>();
+    private List<PostEntity> postList = new ArrayList<>();
 
 
 }
