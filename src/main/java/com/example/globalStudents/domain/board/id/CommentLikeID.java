@@ -17,9 +17,9 @@ public class CommentLikeID implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
-    private CommentEntity commentEntity;
+    private CommentEntity comment;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    private UserEntity user;
 }

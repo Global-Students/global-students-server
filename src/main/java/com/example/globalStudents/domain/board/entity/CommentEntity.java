@@ -40,4 +40,7 @@ public class CommentEntity {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<ReportEntity> reportEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "id.comment", cascade = CascadeType.ALL)
+    private List<CommentLikeEntity> commentLikeEntityList = new ArrayList<>();
 }
