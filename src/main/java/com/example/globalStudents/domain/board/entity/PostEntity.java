@@ -61,7 +61,7 @@ public class PostEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImageEntity> postImageEntityList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.post", cascade = CascadeType.ALL)
     private  List<UserPostReactionEntity> userPostReactionEntityList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
