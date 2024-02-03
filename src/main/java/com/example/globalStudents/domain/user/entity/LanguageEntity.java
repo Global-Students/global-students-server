@@ -19,4 +19,7 @@ public class LanguageEntity {
     private Long id;
     private String name;
 
+    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
+    private List<UserEntity> LanguageUserList = new ArrayList<>();
+
 }

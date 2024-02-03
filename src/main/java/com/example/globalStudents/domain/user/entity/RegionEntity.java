@@ -21,6 +21,6 @@ public class RegionEntity {
     private String name;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
-    private List<UserEntity> RegionUserList = new ArrayList<>();
+    private List<UniversityEntity> RegionUniversityList = new ArrayList<>();
 
 }

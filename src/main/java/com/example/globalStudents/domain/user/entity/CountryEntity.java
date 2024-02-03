@@ -23,4 +23,7 @@ public class CountryEntity {
     @OneToMany(mappedBy = "nationality", cascade = CascadeType.ALL)
     private List<UserEntity> CountryUserList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "hostCountry", cascade = CascadeType.ALL)
+    private List<UserEntity> HostCountryUserList = new ArrayList<>();
+
 }

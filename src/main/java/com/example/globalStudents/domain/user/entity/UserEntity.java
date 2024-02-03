@@ -1,5 +1,6 @@
 package com.example.globalStudents.domain.user.entity;
 
+import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
 import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
 import com.example.globalStudents.domain.user.enums.UserRole;
 import com.example.globalStudents.domain.user.enums.UserStatus;
@@ -22,7 +23,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long uid;
+    private String uid;
 
     private String userId;
 
@@ -34,22 +35,23 @@ public class UserEntity {
 
     private LocalDateTime birth;
 
-    private String pageAddress;
-
     private String nickname;
 
     private String major;
 
-    private String phone;
-
-    private String email;
-
     private String introduction;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
     private UserStatus privacy;
 
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
     private UserStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
     private UserRole role;
 
     private LocalDateTime createdAt;
@@ -70,17 +72,18 @@ public class UserEntity {
     private UniversityEntity homeUniversity;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="host_country_id")
+    private CountryEntity hostCountry;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="nationality_id")
     private CountryEntity nationality;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="region_id")
-    private RegionEntity region;
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="language_id")
     private LanguageEntity language;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserImageEntity> userImageEntityList = new ArrayList<>();
+
 }
