@@ -32,13 +32,12 @@ public class CommentEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private PostEntity postEntity;
+    private PostEntity post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<ReportEntity> reportEntityList = new ArrayList<>();
 }
-

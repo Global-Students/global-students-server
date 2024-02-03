@@ -37,13 +37,13 @@ public class ReportEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private PostEntity postEntity;
+    private PostEntity post;
 
     @ManyToOne
     @JoinColumn(name = "comment_id")
-    private CommentEntity commentEntity;
+    private CommentEntity comment;
 }

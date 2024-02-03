@@ -29,5 +29,5 @@ public class PostImageEntity {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private PostEntity postEntity;
+    private PostEntity post;
 }

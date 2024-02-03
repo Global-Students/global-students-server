@@ -34,7 +34,7 @@ public class PostEntity {
     private Integer view;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(20")
+    @Column(columnDefinition = "VARCHAR(20)")
     private PostStatus status;
 
     @Column(columnDefinition = "TINYINT(1)")
@@ -52,11 +52,11 @@ public class PostEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "board_id")
-    private BoardEntity boardEntity;
+    private BoardEntity board;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImageEntity> postImageEntityList = new ArrayList<>();
