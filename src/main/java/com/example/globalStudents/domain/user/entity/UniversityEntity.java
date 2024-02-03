@@ -26,4 +26,8 @@ public class UniversityEntity {
 
     @OneToMany(mappedBy = "homeUniversity", cascade = CascadeType.ALL)
     private List<UserEntity> HomeUserList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="region_id")
+    private RegionEntity region;
 }

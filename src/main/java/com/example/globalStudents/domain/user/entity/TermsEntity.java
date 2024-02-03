@@ -20,8 +20,6 @@ public class TermsEntity {
 
     private String name;
 
-    private String body;
-
     @Column(columnDefinition = "TINYINT(1)")
     private Boolean required;
 
