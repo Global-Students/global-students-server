@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "user_post_reaction")
 public class UserPostReactionEntity {
 
     @EmbeddedId

@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "comment")
 public class CommentEntity {
 
     @Id
@@ -39,8 +40,8 @@ public class CommentEntity {
     private PostEntity post;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    private List<ReportEntity> reportEntityList = new ArrayList<>();
+    private List<ReportEntity> reportList = new ArrayList<>();
 
     @OneToMany(mappedBy = "id.comment", cascade = CascadeType.ALL)
-    private List<CommentLikeEntity> commentLikeEntityList = new ArrayList<>();
+    private List<CommentLikeEntity> commentLikeList = new ArrayList<>();
 }
