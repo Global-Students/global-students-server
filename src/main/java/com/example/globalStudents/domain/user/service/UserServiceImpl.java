@@ -14,8 +14,6 @@ import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionH
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
