@@ -1,6 +1,6 @@
 package com.example.globalStudents.domain.user.entity;
 
-import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
+import com.example.globalStudents.domain.board.entity.*;
 import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
 import com.example.globalStudents.domain.user.enums.UserRole;
 import com.example.globalStudents.domain.user.enums.UserStatus;
@@ -86,4 +86,18 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserImageEntity> userImageEntityList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PostEntity> postList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
+    private List<UserPostReactionEntity> userPostReactionList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CommentEntity> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
+    private List <CommentLikeEntity> commentLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List <ReportEntity> reportList = new ArrayList<>();
 }
