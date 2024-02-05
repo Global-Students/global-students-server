@@ -8,3 +8,20 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: globalstudentsumc@gmail.com
+    password: qqwdwenysrmchgxp
+
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jwt:
+    secret: qwertyoasdfqwerldfkknjvldmocimdonivosfinvifnodocvifnoinoifdnovinodoi
