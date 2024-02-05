@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 public class ChatService {
     private final ChatRepository chatRepository;
     public ChatListResponse getChatList(String userId) {
+        List<ChatRoomEntity> chatList = chatRepository.findByUserId(userId);
+
+        
     }
 
     public ChatCreateResponse createChatRoom(ChatCreateRequest chatCreateRequest) {
