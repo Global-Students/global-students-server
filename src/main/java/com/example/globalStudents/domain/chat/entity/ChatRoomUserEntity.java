@@ -15,12 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "chat_room_user")
+@IdClass(ChatRoomUserPK.class)
 public class ChatRoomUserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "chat_room_id")
+    private Long chatRoomId;
 
     @Id
+    @Column(name = "user_id")
     private Long userId;
 
     @CreatedDate
@@ -29,9 +31,5 @@ public class ChatRoomUserEntity {
 
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoomEntity chatRoom;
 
 }
