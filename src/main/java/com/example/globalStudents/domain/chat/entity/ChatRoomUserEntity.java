@@ -1,6 +1,7 @@
 package com.example.globalStudents.domain.chat.entity;
 
 
+import com.example.globalStudents.domain.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,12 +19,14 @@ import java.util.List;
 @IdClass(ChatRoomUserPK.class)
 public class ChatRoomUserEntity {
     @Id
-    @Column(name = "chat_room_id")
-    private Long chatRoomId;
+    @ManyToOne
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoomEntity chatRoomId;
 
     @Id
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userId;
 
     @CreatedDate
     @Column(columnDefinition = "DATETIME(6)")
