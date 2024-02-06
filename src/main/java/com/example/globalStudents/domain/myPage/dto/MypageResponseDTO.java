@@ -34,15 +34,13 @@ public class MypageResponseDTO {
         String password;
         String firstName;
         String lastName;
-        String birthYear;
-        String birthMonth;
-        String birthDate;
+        String birth;
         String nickname;
         String nationality;
         String hostCountry;
         String hostUniversity;
         String major;
-        String phoneNumber;
+        String phone;
         String email;
     }
 
@@ -55,15 +53,13 @@ public class MypageResponseDTO {
         String nationality;
         String firstName;
         String lastName;
-        String birthYear;
-        String birthMonth;
-        String birthDate;
+        String birth;
         String hostCountry;
         String hostUniversity;
         String major;
         String introduction;
         String skill;
-        Integer profilePhotoId;
-        Integer backgroundPhotoId;
+        Long profilePhotoId;
+        Long backgroundPhotoId;
     }
 }

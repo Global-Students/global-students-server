@@ -1,6 +1,7 @@
 package com.example.globalStudents.domain.myPage.service;
 
 import com.example.globalStudents.domain.board.entity.PostEntity;
+import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
 import com.example.globalStudents.domain.board.enums.UserPostReactionType;
 import com.example.globalStudents.domain.board.repository.PostRepository;
 import com.example.globalStudents.domain.board.repository.UserPostReactionRepository;
@@ -14,7 +15,9 @@ import com.example.globalStudents.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,7 +48,7 @@ public class MypageServiceImpl implements MypageService {
         List<PostEntity> favoritePosts = userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
                 .getContent()
                 .stream()
-                .map(userPostReaction -> userPostReaction.getId().getPost())
+                .map(UserPostReactionEntity::getPost)
                 .collect(Collectors.toList());
 
         // 프로필 사진 조회
@@ -64,5 +67,92 @@ public class MypageServiceImpl implements MypageService {
                 .profilePhotoId(profileImage.map(UserImageEntity::getId).orElse(null))
                 .backgroundPhotoId(backgroundImage.map(UserImageEntity::getId).orElse(null))
                 .build();
+    }
+    @Override
+    public MypageResponseDTO.MypageInfoDTO getUserInfo(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        return MypageResponseDTO.MypageInfoDTO.builder()
+                .userId(user.getUserId())
+                .password(user.getPassword())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .birth(String.valueOf(user.getBirth()))
+                .nickname(user.getNickname())
+                .nationality(String.valueOf(user.getNationality()))
+                .hostCountry(String.valueOf(user.getHostCountry()))
+                .hostUniversity(String.valueOf(user.getHostUniversity()))
+                .major(user.getMajor())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .build();
+    }
+    @Override
+    public MypageResponseDTO.MypageProfileDTO getUserProfile(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        Optional<UserImageEntity> profileImage = userImageRepository.findByUserIdAndType(userId, ImageType.Profile).stream().findFirst();
+        // 배경 사진 조회
+        Optional<UserImageEntity> backgroundImage = userImageRepository.findByUserIdAndType(userId, ImageType.Background).stream().findFirst();
+
+        return MypageResponseDTO.MypageProfileDTO.builder()
+                .nickname(user.getNickname())
+                .nationality(String.valueOf(user.getNationality()))
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .birth(user.getBirth().toString())
+                .hostCountry(String.valueOf(user.getHostCountry()))
+                .hostUniversity(String.valueOf(user.getHostUniversity()))
+                .major(user.getMajor())
+                .introduction(user.getIntroduction())
+                .skill(user.getSkill())
+                .profilePhotoId(profileImage.map(UserImageEntity::getId).orElse(null))
+                .backgroundPhotoId(backgroundImage.map(UserImageEntity::getId).orElse(null))
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public MypageRequestDTO.MypageInfoUpdateDTO updateUserProfile(Long userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Update fields if they are not null and not empty
+        if (requestDTO.getPassword() != null && !requestDTO.getPassword().isEmpty()) {
+            user.setPassword(requestDTO.getPassword());
+        }
+        if (requestDTO.getBirth() != null && !requestDTO.getBirth().isEmpty()) {
+            user.setBirth(LocalDateTime.parse(requestDTO.getBirth()));
+        }
+        if (requestDTO.getNickname() != null && !requestDTO.getNickname().isEmpty()) {
+            user.setNickname(requestDTO.getNickname());
+        }
+        if (requestDTO.getPhone() != null && !requestDTO.getPhone().isEmpty()) {
+            user.setPhone(requestDTO.getPhone());
+        }
+        if (requestDTO.getEmail() != null && !requestDTO.getEmail().isEmpty()) {
+            user.setEmail(requestDTO.getEmail());
+        }
+        user.setPhonePrivacy(requestDTO.getPhonePrivacy());
+        user.setEmailPrivacy(requestDTO.getEmailPrivacy());
+
+        userRepository.save(user);
+        return requestDTO;
+    }
+    @Override
+    @Transactional
+    public MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(Long userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        user.setNamePrivacy(requestDTO.getNamePrivacy());
+        user.setBirthPrivacy(requestDTO.getBirthPrivacy());
+        user.setUniversityPrivacy(requestDTO.getUniversityPrivacy());
+        user.setMajorPrivacy(requestDTO.getMajorPrivacy());
+
+        userRepository.save(user);
+        return requestDTO;
     }
 }
