@@ -10,6 +10,7 @@ import com.example.globalStudents.domain.user.repository.LanguageRepository;
 import com.example.globalStudents.domain.user.repository.UniversityRepository;
 import com.example.globalStudents.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ public class UserConverterImpl implements Converter <UserEntity,UserRequestDTO.J
     private final UserRepository userRepository;
     private final LanguageRepository languageRepository;
     private final UniversityRepository universityRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     public UserEntity toEntity(UserRequestDTO.JoinDTO joinDTO){
 
         return UserEntity.builder()
@@ -34,7 +36,7 @@ public class UserConverterImpl implements Converter <UserEntity,UserRequestDTO.J
                 .language(languageRepository.findByName("English").get())
                 .uid(generateUID())
                 .userId(joinDTO.getUserId())
-                .password(joinDTO.getPassword())
+                .password(bCryptPasswordEncoder.encode(joinDTO.getPassword()))
                 .firstName(joinDTO.getFirstName())
                 .lastName(joinDTO.getLastName())
                 .birth(LocalDateTime.now())
