@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class UserResponseDTO {
+
     @Builder
     @Getter
     @NoArgsConstructor
@@ -20,7 +21,7 @@ public class UserResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CheckIdDTO{
+    public static class CheckIdResultDTO{
         String userId;
     }
 
@@ -28,7 +29,7 @@ public class UserResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CheckNicknameDTO{
+    public static class CheckNicknameResultDTO{
         String nickname;
     }
 
@@ -36,7 +37,24 @@ public class UserResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class EmailDTO{
-        String nickname;
+    public static class FindIdResultDTO{
+        String email;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindPasswordResultDTO{
+        String email;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MailCodeVerificationResultDTO{
+        Boolean verified;
+    }
+
 }
