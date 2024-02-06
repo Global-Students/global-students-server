@@ -1,11 +1,14 @@
 package com.example.globalStudents.domain.myPage.controller;
 
+import com.example.globalStudents.domain.board.entity.PostEntity;
 import com.example.globalStudents.domain.myPage.dto.MypageRequestDTO;
 import com.example.globalStudents.domain.myPage.dto.MypageResponseDTO;
 import com.example.globalStudents.domain.myPage.service.MypageService;
 import com.example.globalStudents.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,6 +41,11 @@ public class MypageController {
     @PatchMapping("/profile/update/{userId}")
     public ApiResponse<MypageRequestDTO.MypageProfileUpdateDTO> updateProfilePrivacy(@PathVariable Long userId, @RequestBody MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
         MypageRequestDTO.MypageProfileUpdateDTO response = mypageService.updateProfilePrivacy(userId, requestDTO);
+        return ApiResponse.onSuccess(response);
+    }
+    @GetMapping("/writepost/{userId}")
+    public ApiResponse<Page<PostEntity>> getWrittenPostsByUser(@PathVariable Long userId, Pageable pageable) {
+        Page<PostEntity> response = mypageService.findPostsByUserId(userId, pageable);
         return ApiResponse.onSuccess(response);
     }
 }
