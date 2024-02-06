@@ -1,6 +1,7 @@
 package com.example.globalStudents.domain.myPage.controller;
 
 import com.example.globalStudents.domain.board.entity.PostEntity;
+import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
 import com.example.globalStudents.domain.myPage.dto.MypageRequestDTO;
 import com.example.globalStudents.domain.myPage.dto.MypageResponseDTO;
 import com.example.globalStudents.domain.myPage.service.MypageService;
@@ -48,4 +49,10 @@ public class MypageController {
         Page<PostEntity> response = mypageService.findPostsByUserId(userId, pageable);
         return ApiResponse.onSuccess(response);
     }
+    @GetMapping("/favoritepost/{userId}")
+    public ApiResponse<Page<UserPostReactionEntity>> getFavoritePostsByUser(@PathVariable Long userId, Pageable pageable) {
+        Page<UserPostReactionEntity> likes = mypageService.findBookmarkedPostsByUserId(userId, pageable);
+        return ApiResponse.onSuccess(likes);
+    }
+
 }

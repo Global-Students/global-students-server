@@ -161,4 +161,8 @@ public class MypageServiceImpl implements MypageService {
     public Page<PostEntity> findPostsByUserId(Long userId, Pageable pageable) {
         return postRepository.findByUserId(userId, pageable);
     }
+    @Override
+    public Page<UserPostReactionEntity> findBookmarkedPostsByUserId(Long userId, Pageable pageable) {
+        return userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, pageable);
+    }
 }

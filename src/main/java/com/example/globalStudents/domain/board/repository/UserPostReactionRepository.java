@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface UserPostReactionRepository extends JpaRepository<UserPostReactionEntity, UserPostReactionID> {
-    @Query("SELECT upr FROM UserPostReactionEntity upr WHERE upr.id.user.id = :userId AND upr.type = :type")
+    @Query("SELECT upr FROM UserPostReactionEntity upr WHERE upr.user.id = :userId AND upr.type = :type")
     Page<UserPostReactionEntity> findByUserIdAndType(@Param("userId") Long userId, @Param("type") UserPostReactionType type, Pageable pageable);
+
 }

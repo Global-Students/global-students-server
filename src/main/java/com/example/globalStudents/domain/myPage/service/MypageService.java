@@ -1,6 +1,7 @@
 package com.example.globalStudents.domain.myPage.service;
 
 import com.example.globalStudents.domain.board.entity.PostEntity;
+import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
 import com.example.globalStudents.domain.myPage.dto.MypageRequestDTO;
 import com.example.globalStudents.domain.myPage.dto.MypageResponseDTO;
 import org.springframework.data.domain.Page;
@@ -13,4 +14,6 @@ public interface MypageService {
     MypageRequestDTO.MypageInfoUpdateDTO updateUserProfile(Long userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO);
     MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(Long userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO);
     Page<PostEntity> findPostsByUserId(Long userId, Pageable pageable);
+    Page<UserPostReactionEntity> findBookmarkedPostsByUserId(Long userId, Pageable pageable);
+
 }
