@@ -15,13 +15,16 @@ spring:
     username: globalstudentsumc@gmail.com
     password: qqwdwenysrmchgxp
 
-
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+
+  redis:
+    host: localhost
+    port: 6379
 
   jwt:
     secret: qwertyoasdfqwerldfkknjvldmocimdonivosfinvifnodocvifnoinoifdnovinodoi
