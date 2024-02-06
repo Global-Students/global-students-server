@@ -70,7 +70,6 @@ public class MypageServiceImpl implements MypageService {
                 .backgroundPhotoId(backgroundImage.map(UserImageEntity::getId).orElse(null))
                 .build();
     }
-
     @Override
     public MypageResponseDTO.MypageInfoDTO getUserInfo(Long userId) {
         UserEntity user = userRepository.findById(userId)

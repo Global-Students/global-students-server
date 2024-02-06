@@ -79,7 +79,7 @@ public class UserRequestDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UserLoginDTO{
-        String userId;
+        String username;
         String password;
     }
 
@@ -95,7 +95,8 @@ public class UserRequestDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FindPasswordVerificationDTO{
+    public static class MailCodeVerificationDTO{
+        String email;
         String code;
     }
 
@@ -104,6 +105,7 @@ public class UserRequestDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ResetPasswordDTO{
+        String email;
         String password;
         String confirmPassword;
     }
