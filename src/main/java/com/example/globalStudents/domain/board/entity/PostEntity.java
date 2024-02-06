@@ -62,7 +62,7 @@ public class PostEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImageEntity> postImageList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "id.post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private  List<UserPostReactionEntity> userPostReactionList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
@@ -71,4 +71,35 @@ public class PostEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<CommentEntity> commentList = new ArrayList<>();
 
+    public void setBoard(BoardEntity board) {
+        if (this.board != null) {
+            this.board.getPostList().remove(this);
+        }
+        this.board = board;
+        board.getPostList().add(this);
+    }
+
+    public void setUser(UserEntity user) {
+        if (this.user != null) {
+            this.user.getPostList().remove(this);
+        }
+        this.user = user;
+        user.getPostList().add(this);
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBody(String content) {
+        this.body = content;
+    }
+
+    public void setIsAnonymous(Boolean isAnonymous) {
+        this.isAnonymous = isAnonymous;
+    }
 }
