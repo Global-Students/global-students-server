@@ -31,4 +31,13 @@ public class PostImageEntity {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private PostEntity post;
+
+    public void setPost(PostEntity post) {
+        if (this.post != null) {
+            this.post.getPostImageList().remove(this);
+        }
+        this.post = post;
+        post.getPostImageList().add(this);
+    }
+
 }
