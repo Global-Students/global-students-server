@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +47,7 @@ public class MypageServiceImpl implements MypageService {
         List<PostEntity> favoritePosts = userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
                 .getContent()
                 .stream()
+
                 .map(UserPostReactionEntity::getPost)
                 .collect(Collectors.toList());
 
@@ -68,7 +68,6 @@ public class MypageServiceImpl implements MypageService {
                 .backgroundPhotoId(backgroundImage.map(UserImageEntity::getId).orElse(null))
                 .build();
     }
-
     @Override
     public MypageResponseDTO.MypageInfoDTO getUserInfo(Long userId) {
         UserEntity user = userRepository.findById(userId)
