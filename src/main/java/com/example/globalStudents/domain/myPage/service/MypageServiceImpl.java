@@ -65,4 +65,49 @@ public class MypageServiceImpl implements MypageService {
                 .backgroundPhotoId(backgroundImage.map(UserImageEntity::getId).orElse(null))
                 .build();
     }
+
+    @Override
+    public MypageResponseDTO.MypageInfoDTO getUserInfo(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        return MypageResponseDTO.MypageInfoDTO.builder()
+                .userId(user.getUserId())
+                .password(user.getPassword())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .birth(String.valueOf(user.getBirth()))
+                .nickname(user.getNickname())
+                .nationality(String.valueOf(user.getNationality()))
+                .hostCountry(String.valueOf(user.getHostCountry()))
+                .hostUniversity(String.valueOf(user.getHostUniversity()))
+                .major(user.getMajor())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .build();
+    }
+    @Override
+    public MypageResponseDTO.MypageProfileDTO getUserProfile(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        Optional<UserImageEntity> profileImage = userImageRepository.findByUserIdAndType(userId, ImageType.Profile).stream().findFirst();
+        // 배경 사진 조회
+        Optional<UserImageEntity> backgroundImage = userImageRepository.findByUserIdAndType(userId, ImageType.Background).stream().findFirst();
+
+        return MypageResponseDTO.MypageProfileDTO.builder()
+                .nickname(user.getNickname())
+                .nationality(String.valueOf(user.getNationality()))
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .birth(user.getBirth().toString())
+                .hostCountry(String.valueOf(user.getHostCountry()))
+                .hostUniversity(String.valueOf(user.getHostUniversity()))
+                .major(user.getMajor())
+                .introduction(user.getIntroduction())
+                .skill(user.getSkill())
+                .profilePhotoId(profileImage.map(UserImageEntity::getId).orElse(null))
+                .backgroundPhotoId(backgroundImage.map(UserImageEntity::getId).orElse(null))
+                .build();
+    }
 }

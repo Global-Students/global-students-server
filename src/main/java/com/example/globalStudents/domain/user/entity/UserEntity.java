@@ -41,6 +41,12 @@ public class UserEntity {
 
     private String introduction;
 
+    private String skill;
+
+    private String phone;
+
+    private String email;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
     private UserStatus privacy;
