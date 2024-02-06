@@ -1,6 +1,7 @@
 package com.example.globalStudents.domain.myPage.service;
 
 import com.example.globalStudents.domain.board.entity.PostEntity;
+import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
 import com.example.globalStudents.domain.board.enums.UserPostReactionType;
 import com.example.globalStudents.domain.board.repository.PostRepository;
 import com.example.globalStudents.domain.board.repository.UserPostReactionRepository;
@@ -49,7 +50,7 @@ public class MypageServiceImpl implements MypageService {
         List<PostEntity> favoritePosts = userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
                 .getContent()
                 .stream()
-                .map(userPostReaction -> userPostReaction.getId().getPost())
+                .map(UserPostReactionEntity::getPost)
                 .collect(Collectors.toList());
 
         // 프로필 사진 조회
