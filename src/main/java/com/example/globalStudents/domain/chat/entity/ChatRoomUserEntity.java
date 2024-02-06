@@ -16,14 +16,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "chat_room_user")
-@IdClass(ChatRoomUserPK.class)
 public class ChatRoomUserEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
     private ChatRoomEntity chatRoomId;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userId;
