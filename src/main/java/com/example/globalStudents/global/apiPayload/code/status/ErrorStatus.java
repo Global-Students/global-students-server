@@ -30,9 +30,9 @@ public enum ErrorStatus implements BaseErrorCode {
     JOIN_CODE_INVALID(HttpStatus.BAD_REQUEST, "VERIFY400_2", "잘못된 인증번호입니다 - code 파라미터를 재입력하는 경우"),
     LOGIN_ERROR(HttpStatus.BAD_REQUEST, "LOGIN400_1", "아이디 혹은 비밀번호를 재입력하세요 - 아이디 혹은 비밀번호가 잘못된 경우"),
     LOGIN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "LOGIN401_1", "인증이 필요합니다 - 인증 정보를 누락하거나 잘못 지정해 요청한 경우"),
-    FIND_ID_EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "VERIFY400_3", "등록된 이메일이 존재하지 않습니다 - 이메일을 재입력하는 경우"),
+    EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "VERIFY400_3", "등록된 이메일이 존재하지 않습니다 - 이메일을 재입력하는 경우"),
     FIND_PASSWORD_INVALID_CODE(HttpStatus.BAD_REQUEST, "VERIFY400_2", "잘못된 인증번호입니다 - code 파라미터를 재입력하는 경우"),
-    RESET_PASSOWRD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_6", "잘못된 형식입니다 - confirm_password가 잘못된 형식인 경우"),
+    RESET_PASSOWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_6", "잘못된 형식입니다 - confirm_password가 잘못된 형식인 경우"),
     FIND_ID_NOT_EXIST(HttpStatus.BAD_REQUEST, "LOGIN400_2", "등록된 이메일이 존재하지 않습니다 - email이 등록되어 있지 않은 경우"),
     FIND_ID_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_3", "잘못된 형식입니다 - email이 잘못된 형식인 경우"),
 
