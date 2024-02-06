@@ -14,7 +14,9 @@ import com.example.globalStudents.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -109,5 +111,48 @@ public class MypageServiceImpl implements MypageService {
                 .profilePhotoId(profileImage.map(UserImageEntity::getId).orElse(null))
                 .backgroundPhotoId(backgroundImage.map(UserImageEntity::getId).orElse(null))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public MypageRequestDTO.MypageInfoUpdateDTO updateUserProfile(Long userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Update fields if they are not null and not empty
+        if (requestDTO.getPassword() != null && !requestDTO.getPassword().isEmpty()) {
+            user.setPassword(requestDTO.getPassword());
+        }
+        if (requestDTO.getBirth() != null && !requestDTO.getBirth().isEmpty()) {
+            user.setBirth(LocalDateTime.parse(requestDTO.getBirth()));
+        }
+        if (requestDTO.getNickname() != null && !requestDTO.getNickname().isEmpty()) {
+            user.setNickname(requestDTO.getNickname());
+        }
+        if (requestDTO.getPhone() != null && !requestDTO.getPhone().isEmpty()) {
+            user.setPhone(requestDTO.getPhone());
+        }
+        if (requestDTO.getEmail() != null && !requestDTO.getEmail().isEmpty()) {
+            user.setEmail(requestDTO.getEmail());
+        }
+        user.setPhonePrivacy(requestDTO.getPhonePrivacy());
+        user.setEmailPrivacy(requestDTO.getEmailPrivacy());
+
+        userRepository.save(user);
+        return requestDTO;
+    }
+    @Override
+    @Transactional
+    public MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(Long userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        user.setNamePrivacy(requestDTO.getNamePrivacy());
+        user.setBirthPrivacy(requestDTO.getBirthPrivacy());
+        user.setUniversityPrivacy(requestDTO.getUniversityPrivacy());
+        user.setMajorPrivacy(requestDTO.getMajorPrivacy());
+
+        userRepository.save(user);
+        return requestDTO;
     }
 }

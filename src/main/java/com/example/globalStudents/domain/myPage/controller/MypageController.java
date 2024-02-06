@@ -20,16 +20,24 @@ public class MypageController {
         MypageResponseDTO.MypageDTO response = mypageService.getMyPage(userId, request);
         return ApiResponse.onSuccess(response);
     }
-
     @GetMapping("/info/{userId}")
     public ApiResponse<MypageResponseDTO.MypageInfoDTO> getUserInfo(@PathVariable Long userId) {
         MypageResponseDTO.MypageInfoDTO response = mypageService.getUserInfo(userId);
         return ApiResponse.onSuccess(response);
     }
-
     @GetMapping("/profile/{userId}")
     public ApiResponse<MypageResponseDTO.MypageProfileDTO> getUserProfile(@PathVariable Long userId) {
         MypageResponseDTO.MypageProfileDTO response = mypageService.getUserProfile(userId);
+        return ApiResponse.onSuccess(response);
+    }
+    @PatchMapping("/info/update/{userId}")
+    public ApiResponse<MypageRequestDTO.MypageInfoUpdateDTO> updateUserProfile(@PathVariable Long userId, @RequestBody MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
+        MypageRequestDTO.MypageInfoUpdateDTO response = mypageService.updateUserProfile(userId, requestDTO);
+        return ApiResponse.onSuccess(response);
+    }
+    @PatchMapping("/profile/update/{userId}")
+    public ApiResponse<MypageRequestDTO.MypageProfileUpdateDTO> updateProfilePrivacy(@PathVariable Long userId, @RequestBody MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
+        MypageRequestDTO.MypageProfileUpdateDTO response = mypageService.updateProfilePrivacy(userId, requestDTO);
         return ApiResponse.onSuccess(response);
     }
 }

@@ -25,5 +25,6 @@ public class UserImageEntity {
 
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
     private ImageType type;
 }
