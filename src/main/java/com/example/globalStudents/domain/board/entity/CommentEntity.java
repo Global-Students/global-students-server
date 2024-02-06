@@ -42,6 +42,22 @@ public class CommentEntity {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<ReportEntity> reportList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "id.comment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentLikeEntity> commentLikeList = new ArrayList<>();
+
+    public void setUser(UserEntity user) {
+        if (this.user != null) {
+            this.user.getCommentList().remove(this);
+        }
+        this.user = user;
+        user.getCommentList().add(this);
+    }
+
+    public void setPost(PostEntity post) {
+        if (this.post != null) {
+            this.post.getCommentList().remove(this);
+        }
+        this.post = post;
+        post.getCommentList().add(this);
+    }
 }

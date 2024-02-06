@@ -8,18 +8,10 @@ import lombok.*;
 import java.io.Serializable;
 
 @Getter
-@Setter
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Embeddable
 public class CommentLikeID implements Serializable {
-
-    @ManyToOne
-    @JoinColumn(name = "comment_id")
-    private CommentEntity comment;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private Long comment;
+    private Long user;
 }

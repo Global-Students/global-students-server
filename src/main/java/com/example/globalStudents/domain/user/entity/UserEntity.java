@@ -95,13 +95,13 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PostEntity> postList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserPostReactionEntity> userPostReactionList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CommentEntity> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List <CommentLikeEntity> commentLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
