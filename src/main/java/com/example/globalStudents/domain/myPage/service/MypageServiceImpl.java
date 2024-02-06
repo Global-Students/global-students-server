@@ -13,7 +13,9 @@ import com.example.globalStudents.domain.myPage.repository.UserImageRepository;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,5 +156,9 @@ public class MypageServiceImpl implements MypageService {
 
         userRepository.save(user);
         return requestDTO;
+    }
+    @Override
+    public Page<PostEntity> findPostsByUserId(Long userId, Pageable pageable) {
+        return postRepository.findByUserId(userId, pageable);
     }
 }
