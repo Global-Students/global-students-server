@@ -7,7 +7,7 @@ import java.util.List;
 public class PostRequestDTO {
 
     @Getter
-    public static class CreatePostDTO {
+    public static class WritePostDTO {
         String boardId;
         String title;
         String content;
@@ -15,16 +15,6 @@ public class PostRequestDTO {
 
         List<PostRequestImageDTO> image;
 
-    }
-
-    @Getter
-    public static class UpdatePostDTO {
-        String boardId;
-        String title;
-        String content;
-        Boolean isAnonymous;
-
-        List<PostRequestImageDTO> image;
     }
 
     @Getter
@@ -38,9 +28,4 @@ public class PostRequestDTO {
         String reactionType;
     }
 
-    @Getter
-    public static class UserPostReactionRequestDTO {
-        String postId;
-        String reactionType;
-    }
 }

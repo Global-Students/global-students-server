@@ -102,4 +102,8 @@ public class PostEntity {
     public void setIsAnonymous(Boolean isAnonymous) {
         this.isAnonymous = isAnonymous;
     }
+
+    public void incrementView() {
+        this.view++;
+    }
 }
