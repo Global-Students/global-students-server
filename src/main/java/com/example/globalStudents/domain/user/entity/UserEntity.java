@@ -48,6 +48,8 @@ public class UserEntity {
 
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
     private UserStatus namePrivacy;
 
     @Enumerated(EnumType.STRING)
