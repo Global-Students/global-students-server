@@ -9,7 +9,8 @@ public enum UserStatus {
     DORMANT("휴면"),
     UNREGISTERED("해지"),
     PUBLIC("공개"),
-    PRIVATE("비공계"),
+    PRIVATE("비공개"),
+    UNIVERSITY_PUBLIC("학교 공개"),
 
     ;
 
