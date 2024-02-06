@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     Page<PostEntity> findByUserId(Long userId, Pageable pageable);
-    List<PostEntity> findFavoritesByUserId(Long userId);
 }
