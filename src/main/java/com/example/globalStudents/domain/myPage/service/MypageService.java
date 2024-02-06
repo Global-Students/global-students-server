@@ -9,4 +9,5 @@ public interface MypageService {
     MypageResponseDTO.MypageProfileDTO getUserProfile(Long userId);
     MypageRequestDTO.MypageInfoUpdateDTO updateUserProfile(Long userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO);
     MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(Long userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO);
+
 }
