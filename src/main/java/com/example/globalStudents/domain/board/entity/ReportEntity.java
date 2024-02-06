@@ -47,4 +47,28 @@ public class ReportEntity {
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private CommentEntity comment;
+
+    public void setUser(UserEntity user) {
+        if (this.user != null) {
+            this.user.getReportList().remove(this);
+        }
+        this.user = user;
+        user.getReportList().add(this);
+    }
+
+    public void setPost(PostEntity post) {
+        if (this.post != null) {
+            this.post.getReportList().remove(this);
+        }
+        this.post = post;
+        post.getReportList().add(this);
+    }
+
+    public void setComment(CommentEntity comment) {
+        if (this.comment != null) {
+            this.comment.getReportList().remove(this);
+        }
+        this.comment = comment;
+        comment.getReportList().add(this);
+    }
 }
