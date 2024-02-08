@@ -7,8 +7,10 @@ import com.example.globalStudents.domain.user.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -34,7 +36,7 @@ public class UserEntity {
 
     private String lastName;
 
-    private LocalDateTime birth;
+    private LocalDate birth;
 
     private String nickname;
 
@@ -47,6 +49,9 @@ public class UserEntity {
     private String phone;
 
     private String email;
+
+    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean universityVerified;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")

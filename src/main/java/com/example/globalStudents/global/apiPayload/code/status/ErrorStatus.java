@@ -16,26 +16,24 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-
-    // 회원가입
+    // JOIN Error
+    JOIN_NICKNAME_ALREADY_EXIST(HttpStatus.CONFLICT, "CHECK409_2", "이미 존재하는 닉네임입니다 - 중복된 닉네임인 경우"),
     JOIN_ID_ALREADY_EXIST(HttpStatus.CONFLICT, "CHECK409_1", "이미 존재하는 아이디입니다 - 중복된 아이디인 경우"),
-    JOIN_TERMS_INCOMPLETE(HttpStatus.BAD_REQUEST, "JOIN400_5", "동의하지 않은 필수 약관이 존재합니다 - 필수 약관을 동의하지 않은 경우"),
     JOIN_ID_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "JOIN400_1", "아이디는 8자 이상의 영문 대소문자/숫자/특수문자입니다 - id 파라미터 형식이 잘못된 경우"),
+    JOIN_TERMS_INCOMPLETE(HttpStatus.BAD_REQUEST, "JOIN400_5", "동의하지 않은 필수 약관이 존재합니다 - 필수 약관을 동의하지 않은 경우"),
     JOIN_PASSWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "JOIN400_2", "비밀번호는 8자 이상의 영문 대소문자/숫자/특수문자입니다 - password 파라미터 형식이 잘못된 경우"),
     JOIN_PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "JOIN400_3", "비밀번호가 일치하지 않습니다 - confirmPassword와 password 파라미터가 일치하지 않은 경우"),
     JOIN_INFORMATION_INCOMPLETE(HttpStatus.BAD_REQUEST, "JOIN400_4", "입력하지 않은 필수 정보가 존재합니다 - 필수 정보가 누락된 경우"),
-    JOIN_NICKNAME_ALREADY_EXIST(HttpStatus.CONFLICT, "CHECK409_2", "이미 존재하는 닉네임입니다 - 중복된 닉네임인 경우"),
     JOIN_EMAIL_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "VERIFY400_1", "잘못된 이메일 형식입니다 - email 파라미터를 재입력하는 경우"),
     JOIN_EMAIL_INVALID_SOURCE(HttpStatus.BAD_REQUEST, "VERIFY400_2", "학생 혹은 교육기관의 이메일이 아닙니다 - email 파라미터를 재입력하는 경우"),
     JOIN_CODE_INVALID(HttpStatus.BAD_REQUEST, "VERIFY400_2", "잘못된 인증번호입니다 - code 파라미터를 재입력하는 경우"),
     LOGIN_ERROR(HttpStatus.BAD_REQUEST, "LOGIN400_1", "아이디 혹은 비밀번호를 재입력하세요 - 아이디 혹은 비밀번호가 잘못된 경우"),
-    LOGIN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "LOGIN401_1", "인증이 필요합니다 - 인증 정보를 누락하거나 잘못 지정해 요청한 경우"),
-    EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "VERIFY400_3", "등록된 이메일이 존재하지 않습니다 - 이메일을 재입력하는 경우"),
+    FIND_PASSWORD_EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "VERIFY400_3", "등록된 이메일이 존재하지 않습니다 - 이메일을 재입력하는 경우"),
     FIND_PASSWORD_INVALID_CODE(HttpStatus.BAD_REQUEST, "VERIFY400_2", "잘못된 인증번호입니다 - code 파라미터를 재입력하는 경우"),
-    RESET_PASSOWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_6", "잘못된 형식입니다 - confirm_password가 잘못된 형식인 경우"),
-    FIND_ID_NOT_EXIST(HttpStatus.BAD_REQUEST, "LOGIN400_2", "등록된 이메일이 존재하지 않습니다 - email이 등록되어 있지 않은 경우"),
-    FIND_ID_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_3", "잘못된 형식입니다 - email이 잘못된 형식인 경우"),
-
+    FIND_PASSWORD_EXPIRED_CODE(HttpStatus.BAD_REQUEST, "VERIFY400_2", "잘못된 인증번호입니다 - code 파라미터를 재입력하는 경우"),
+    RESET_PASSWORD_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_6", "잘못된 형식입니다 - confirm_password가 잘못된 형식인 경우"),
+    FIND_ID_EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "LOGIN400_2", "등록된 이메일이 존재하지 않습니다 - email이 등록되어 있지 않은 경우"),
+    FIND_ID_EMAIL_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_3", "잘못된 형식입니다 - email이 잘못된 형식인 경우"),
 
     // Chat error
     CHAT_NOT_FOUND(HttpStatus.BAD_REQUEST, "CHAT400_1", "채팅방을 불러올 수 없습니다. - 채팅방이 조회되지 않는 경우"),
@@ -64,6 +62,7 @@ public enum ErrorStatus implements BaseErrorCode {
     POST_IMAGE_ID_INVALID(HttpStatus.BAD_REQUEST, "IMAGE400_1", "잘못된 이미지 ID 입니다 - image id 가 잘못된 형식인 경우"),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST404_1", "존재하지 않는 게시글입니다 - 삭제된 게시글 또는 요청한 게시글을 찾을 수 없는 경우"),
     POST_ALREADY_REACTED(HttpStatus.BAD_REQUEST, "POST403_2", "이미 좋아요/즐겨찾기 한 게시글입니다 - 중복된 요청인 경우");
+
 
 
     // ~~~ 관련 응답 ....

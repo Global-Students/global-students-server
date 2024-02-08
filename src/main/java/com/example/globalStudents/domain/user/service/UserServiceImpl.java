@@ -9,15 +9,18 @@ import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.domain.user.repository.TermsRepository;
 import com.example.globalStudents.domain.user.repository.UserAgreeRepository;
 import com.example.globalStudents.domain.user.repository.UserRepository;
+import com.example.globalStudents.global.apiPayload.ApiResponse;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
 import com.example.globalStudents.global.util.RedisUtil;
+import com.univcert.api.UnivCert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -25,7 +28,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
+    final String key = "a28672dd-bb43-4601-a227-c5ce571d23e5";
     private final Converter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> converter;
     private final UserRepository userRepository;
     private final UserAgreeRepository userAgreeRepository;
@@ -96,7 +99,7 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findByEmail(email).isPresent()){
             mailService.sendFindIdMail(email,userEntity.get().getUserId());
         } else {
-            throw new ExceptionHandler(ErrorStatus.EMAIL_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FIND_ID_EMAIL_NOT_FOUND);
         }
         return UserResponseDTO.FindIdResultDTO.builder()
                 .email(email)
@@ -109,7 +112,7 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findByEmail(email).isPresent()){
             mailService.sendFindPasswordMail(email);
         } else {
-            throw new ExceptionHandler(ErrorStatus.EMAIL_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_EMAIL_NOT_FOUND);
         }
         return UserResponseDTO.FindPasswordResultDTO.builder()
                 .email(email)
@@ -118,11 +121,11 @@ public class UserServiceImpl implements UserService {
 
     public UserResponseDTO.MailCodeVerificationResultDTO verifyEmailCode(String email, String code) {
         String codeFoundByEmail = redisUtil.getData(email);
-        if (codeFoundByEmail == null || !codeFoundByEmail.equals(code)) {
-            return UserResponseDTO.MailCodeVerificationResultDTO
-                    .builder()
-                    .verified(false)
-                    .build();
+
+        if(codeFoundByEmail == null) {
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_EXPIRED_CODE);
+        } else if (!codeFoundByEmail.equals(code)) {
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_INVALID_CODE);
         }
         return UserResponseDTO.MailCodeVerificationResultDTO
                 .builder()
@@ -139,10 +142,43 @@ public class UserServiceImpl implements UserService {
             updateEntity.setUpdatedAt(LocalDateTime.now());
             userRepository.save(updateEntity);
         } else {
-            throw new ExceptionHandler(ErrorStatus.EMAIL_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_EMAIL_NOT_FOUND);
         }
     }
 
-    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @Override
+    public UserResponseDTO.UniversityEmailResultDTO certifyUniversity(String email, String university) {
+        try{
+            Boolean success = (Boolean) UnivCert.certify(key,email,university,false).get("success");
+            if(success){
+                return UserResponseDTO.UniversityEmailResultDTO.builder()
+                        .complete(true)
+                        .build();
+            } else {
+                throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
+            }
+        } catch (IOException e){
+            throw new ExceptionHandler(ErrorStatus._INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @Override
+    public UserResponseDTO.UniversityEmailVerificationResultDTO certifyCode(String email, String university, String code) {
+        try{
+            Boolean success = (Boolean) UnivCert.certifyCode(key,email,university,Integer.parseInt(code)).get("success");
+            if(success){
+                return UserResponseDTO.UniversityEmailVerificationResultDTO.builder()
+                        .university(university)
+                        .build();
+            }else{
+                throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
+            }
+        } catch (IOException e){
+            throw new ExceptionHandler(ErrorStatus._INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
 }
