@@ -6,6 +6,7 @@ import com.example.globalStudents.domain.user.service.MailService;
 import com.example.globalStudents.domain.user.service.MailServiceImpl;
 import com.example.globalStudents.domain.user.service.UserService;
 import com.example.globalStudents.global.apiPayload.ApiResponse;
+import com.univcert.api.UnivCert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +41,25 @@ public class AuthController {
             String user_nickname
     ){
         UserResponseDTO.CheckNicknameResultDTO nickname = userService.checkNickname(user_nickname);
-        return ApiResponse.onCreated(nickname);
+        return ApiResponse.onSuccess(nickname);
+    }
+
+    @PostMapping("/university-verification")
+    public ApiResponse<UserResponseDTO.UniversityEmailResultDTO> sendUniversityMail(
+            @RequestBody
+            UserRequestDTO.UniversityEmailDTO universityEmailDTO
+    ){
+        UserResponseDTO.UniversityEmailResultDTO universityEmailResult = userService.certifyUniversity(universityEmailDTO.getEmail(), universityEmailDTO.getUniversity());
+        return ApiResponse.onCreated(universityEmailResult);
+    }
+
+    @PostMapping("/university-verification/code")
+    public ApiResponse<UserResponseDTO.UniversityEmailVerificationResultDTO> checkUniversityCode(
+            @RequestBody
+            UserRequestDTO.UniversityEmailVerificationDTO universityEmailVerificationDTO
+    ){
+        UserResponseDTO.UniversityEmailVerificationResultDTO verificationResult = userService.certifyCode(universityEmailVerificationDTO.getEmail(), universityEmailVerificationDTO.getUniversity(), universityEmailVerificationDTO.getCode());
+        return ApiResponse.onCreated(verificationResult);
     }
 
 }

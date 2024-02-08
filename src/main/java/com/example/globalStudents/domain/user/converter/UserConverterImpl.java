@@ -46,6 +46,7 @@ public class UserConverterImpl implements Converter <UserEntity,UserRequestDTO.J
                 .privacy(UserStatus.PUBLIC)
                 .role(UserRole.USER)
                 .createdAt(LocalDateTime.now())
+                .universityVerified(joinDTO.getVerified())
                 .build();
 
     }

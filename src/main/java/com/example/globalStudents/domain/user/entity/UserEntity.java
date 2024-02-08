@@ -50,6 +50,9 @@ public class UserEntity {
 
     private String email;
 
+    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean universityVerified;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
     private UserStatus namePrivacy;

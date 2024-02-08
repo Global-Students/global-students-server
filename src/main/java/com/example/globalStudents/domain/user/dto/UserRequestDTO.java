@@ -28,6 +28,8 @@ public class UserRequestDTO {
         String hostCountry;
         String homeUniversity;
         String hostUniversity;
+
+        Boolean verified;
     }
 
 
@@ -52,14 +54,18 @@ public class UserRequestDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UniversityEmailDTO{
+        String university;
         String email;
     }
+
 
     @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UniversityEmailVerificationDTO{
+        String university;
+        String email;
         String code;
     }
 
