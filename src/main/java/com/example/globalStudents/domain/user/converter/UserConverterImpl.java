@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -39,7 +40,7 @@ public class UserConverterImpl implements Converter <UserEntity,UserRequestDTO.J
                 .password(bCryptPasswordEncoder.encode(joinDTO.getPassword()))
                 .firstName(joinDTO.getFirstName())
                 .lastName(joinDTO.getLastName())
-                .birth(LocalDateTime.now())
+                .birth(convertBirth("2000","3","2"))
                 .nickname(joinDTO.getNickname())
                 .status(UserStatus.REGISTERED)
                 .privacy(UserStatus.PUBLIC)
@@ -61,6 +62,10 @@ public class UserConverterImpl implements Converter <UserEntity,UserRequestDTO.J
         Date nowDate = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         return "U_"+simpleDateFormat.format(nowDate)+"-"+(userRepository.count()+1);
+    }
+
+    public LocalDate convertBirth(String year, String month, String day){
+        return LocalDate.of(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(day));
     }
 
 }
