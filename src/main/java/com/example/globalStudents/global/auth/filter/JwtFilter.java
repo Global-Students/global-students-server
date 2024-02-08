@@ -4,6 +4,7 @@ import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.domain.user.enums.UserRole;
 import com.example.globalStudents.global.auth.jwt.CustomUserDetails;
 import com.example.globalStudents.global.util.JWTUtil;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,9 +34,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (authorization == null || !authorization.startsWith("Bearer ")) {
 
-                filterChain.doFilter(request, response);
+                throw new JwtException("Token Null");
 
-                return;
             }
 
             String token = authorization.split(" ")[1];

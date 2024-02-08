@@ -4,6 +4,7 @@ import com.example.globalStudents.global.apiPayload.ApiResponse;
 import com.example.globalStudents.global.apiPayload.code.ErrorReasonDTO;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,40 +27,38 @@ import java.util.Map;
 @RestControllerAdvice
 public class TokenExceptionAdvice extends ResponseEntityExceptionHandler{
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(InsufficientAuthenticationException.class)
+    @org.springframework.web.bind.annotation.ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> handleInsufficientAuthenticationException(Exception e, WebRequest request) {
-        e.printStackTrace();
 
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, e.getMessage());
+        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "General Token Error");
     }
-
 
     @org.springframework.web.bind.annotation.ExceptionHandler(SignatureException.class)
     public ResponseEntity<Object> handleSignatureException(Exception e, WebRequest request) {
         e.printStackTrace();
 
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, e.getMessage());
+        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "Token Not Valid");
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<Object> handleMalformedJwtException(Exception e, WebRequest request) {
-        e.printStackTrace();
 
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, e.getMessage());
+
+        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "Token Not Valid");
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<Object> handleExpiredJwtException(Exception e, WebRequest request) {
-        e.printStackTrace();
 
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, e.getMessage());
+
+        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "Token Expired");
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
                                                            HttpHeaders headers, HttpServletRequest request) {
 
         ApiResponse<Object> body = ApiResponse.onFailure(reason.getCode(),reason.getMessage(),null);
-//        e.printStackTrace();
+
 
         WebRequest webRequest = new ServletWebRequest(request);
 
