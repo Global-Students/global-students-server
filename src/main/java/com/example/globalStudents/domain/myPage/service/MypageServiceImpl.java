@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -126,7 +127,7 @@ public class MypageServiceImpl implements MypageService {
             user.setPassword(requestDTO.getPassword());
         }
         if (requestDTO.getBirth() != null && !requestDTO.getBirth().isEmpty()) {
-            user.setBirth(LocalDateTime.parse(requestDTO.getBirth()));
+            user.setBirth(LocalDate.parse(requestDTO.getBirth()));
         }
         if (requestDTO.getNickname() != null && !requestDTO.getNickname().isEmpty()) {
             user.setNickname(requestDTO.getNickname());
