@@ -4,7 +4,6 @@ import com.example.globalStudents.domain.board.enums.BoardStatus;
 import com.example.globalStudents.domain.board.enums.BoardType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,10 +28,10 @@ public class BoardEntity {
     @Column(columnDefinition = "VARCHAR(10)")
     private BoardType type;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     private BoardStatus status;
 
-    @CreatedDate
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
 

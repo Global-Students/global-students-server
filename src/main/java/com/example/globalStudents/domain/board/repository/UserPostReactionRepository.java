@@ -17,7 +17,5 @@ public interface UserPostReactionRepository extends JpaRepository<UserPostReacti
     @Query("SELECT upr FROM UserPostReactionEntity upr WHERE upr.user.id = :userId AND upr.type = :type")
     Page<UserPostReactionEntity> findByUserIdAndType(@Param("userId") Long userId, @Param("type") UserPostReactionType type, Pageable pageable);
 
-    List<UserPostReactionEntity> findByPostAndType(PostEntity post, UserPostReactionType type);
-
     List<UserPostReactionEntity> findByPostAndUserAndType(PostEntity post, UserEntity user, UserPostReactionType type);
 }

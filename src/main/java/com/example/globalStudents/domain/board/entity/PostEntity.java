@@ -4,7 +4,6 @@ import com.example.globalStudents.domain.board.enums.PostStatus;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,6 +33,12 @@ public class PostEntity {
     @Column(nullable = false)
     private Integer view;
 
+    @Column(nullable = false)
+    private Integer likes;
+
+    @Column(nullable = false)
+    private Integer bookmarks;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
     private PostStatus status;
@@ -41,7 +46,6 @@ public class PostEntity {
     @Column(columnDefinition = "TINYINT(1)")
     private Boolean isAnonymous;
 
-    @CreatedDate
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
 
@@ -59,16 +63,16 @@ public class PostEntity {
     @JoinColumn(name = "board_id")
     private BoardEntity board;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImageEntity> postImageList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.ALL)
     private  List<UserPostReactionEntity> userPostReactionList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<ReportEntity> reportList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post", cascade = CascadeType.ALL)
     private List<CommentEntity> commentList = new ArrayList<>();
 
     public void setBoard(BoardEntity board) {
@@ -87,10 +91,6 @@ public class PostEntity {
         user.getPostList().add(this);
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -103,7 +103,19 @@ public class PostEntity {
         this.isAnonymous = isAnonymous;
     }
 
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public void incrementView() {
         this.view++;
+    }
+
+    public void incrementLikes() {
+        this.likes++;
+    }
+
+    public void incrementBookmarks() {
+        this.bookmarks++;
     }
 }
