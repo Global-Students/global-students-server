@@ -59,7 +59,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/error","/v3/**", "/swagger-ui/**","/auth/**","/user/**").permitAll()
+                        .requestMatchers("/", "/error","/v3/**", "/swagger-ui/**","/auth/join/**","/user/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated());
 
         http
@@ -69,7 +70,8 @@ public class SecurityConfig {
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http
-                .exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint));
+                .exceptionHandling()
+                    .authenticationEntryPoint(entryPoint);
 
         http
                 .sessionManagement((session) -> session
