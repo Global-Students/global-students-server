@@ -6,28 +6,27 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Table(name = "chat_room_user")
-public class ChatRoomUserEntity {
+@IdClass(ChatRoomUserPK.class)
+public class ChatRoomUserEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
-    private ChatRoomEntity chatRoomId;
+    private ChatRoomEntity chatRoom;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity userId;
+    private UserEntity user;
 
     @CreatedDate
     @Column(columnDefinition = "DATETIME(6)")

@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -32,6 +33,6 @@ public class ChatRoomEntity {
     private LocalDateTime updatedAt;
 
     // 연관관계
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<MessageEntity> MessageList = new ArrayList<>();
 }
