@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
-    private final RedisUtil redisUtil;
 
     @PostMapping("/logout")
     public ApiResponse<String> logout(HttpServletRequest request) {
