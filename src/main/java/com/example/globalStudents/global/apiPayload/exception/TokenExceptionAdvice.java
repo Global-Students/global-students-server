@@ -30,28 +30,22 @@ public class TokenExceptionAdvice extends ResponseEntityExceptionHandler{
     @org.springframework.web.bind.annotation.ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> handleInsufficientAuthenticationException(Exception e, WebRequest request) {
 
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "General Token Error");
+        return handleExceptionInternalFalse(e, ErrorStatus.TOKEN_ERROR, HttpHeaders.EMPTY, ErrorStatus.TOKEN_ERROR.getHttpStatus(),request, ErrorStatus.TOKEN_ERROR.getMessage());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(SignatureException.class)
-    public ResponseEntity<Object> handleSignatureException(Exception e, WebRequest request) {
-        e.printStackTrace();
-
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "Token Not Valid");
-    }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<Object> handleMalformedJwtException(Exception e, WebRequest request) {
 
 
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "Token Not Valid");
+        return handleExceptionInternalFalse(e, ErrorStatus.TOKEN_MALFUNCTION, HttpHeaders.EMPTY, ErrorStatus.TOKEN_MALFUNCTION.getHttpStatus(),request, ErrorStatus.TOKEN_MALFUNCTION.getMessage());
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<Object> handleExpiredJwtException(Exception e, WebRequest request) {
 
+        return handleExceptionInternalFalse(e, ErrorStatus.TOKEN_EXPIRED, HttpHeaders.EMPTY, ErrorStatus.TOKEN_EXPIRED.getHttpStatus(),request, ErrorStatus.TOKEN_EXPIRED.getMessage());
 
-        return handleExceptionInternalFalse(e, ErrorStatus._UNAUTHORIZED, HttpHeaders.EMPTY, ErrorStatus._UNAUTHORIZED.getHttpStatus(),request, "Token Expired");
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,

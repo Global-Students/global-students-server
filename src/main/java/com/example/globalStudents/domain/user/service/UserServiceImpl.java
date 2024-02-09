@@ -12,8 +12,14 @@ import com.example.globalStudents.domain.user.repository.UserRepository;
 import com.example.globalStudents.global.apiPayload.ApiResponse;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
+import com.example.globalStudents.global.util.JWTUtil;
 import com.example.globalStudents.global.util.RedisUtil;
 import com.univcert.api.UnivCert;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private  final TermsRepository termsRepository;
     private final MailService mailService;
     private final RedisUtil redisUtil;
+    private final JWTUtil jwtUtil;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO) {
@@ -178,6 +185,30 @@ public class UserServiceImpl implements UserService {
             throw new ExceptionHandler(ErrorStatus._INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    public void logout(HttpServletRequest request){
+        String accessToken = request.getHeader("Authorization");
+        if(accessToken==null || !accessToken.startsWith("Bearer ")){
+            throw new ExceptionHandler(ErrorStatus.TOKEN_ERROR);
+        }
+        accessToken = accessToken.split(" ")[1];
+
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e){
+            throw new ExceptionHandler(ErrorStatus.TOKEN_EXPIRED);
+        } catch (MalformedJwtException e){
+            throw new ExceptionHandler(ErrorStatus.TOKEN_MALFUNCTION);
+        } catch (JwtException e){
+            throw new ExceptionHandler(ErrorStatus.TOKEN_ERROR);
+        }
+
+        if(!redisUtil.existData(accessToken)){
+            redisUtil.setDataExpire(accessToken,"true",60*60*60L);
+        } else {
+            throw new ExceptionHandler(ErrorStatus.LOGGED_OUT);
+        }
     }
 
 
