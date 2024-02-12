@@ -28,3 +28,16 @@ spring:
 
   jwt:
     secret: qwertyoasdfqwerldfkknjvldmocimdonivosfinvifnodocvifnoinoifdnovinodoi
+
+  cloud:
+    aws:
+      s3:
+        bucket: global-students
+      credentials:
+        access-key: AKIAWQTWEXHUJ5K5QLVP
+        secret-key: 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
+      region:
+        static: ap-northeast-2
+        auto: false
+      stack:
+        auto: false
