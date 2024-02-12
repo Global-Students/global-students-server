@@ -1,5 +1,7 @@
 package com.example.globalStudents.global.auth;
 
+import com.example.globalStudents.domain.user.enums.UserRole;
+import com.example.globalStudents.global.auth.filter.AuthenticationAccessDeniedHandler;
 import com.example.globalStudents.global.auth.filter.JwtFilter;
 import com.example.globalStudents.global.auth.filter.LoginFilter;
 import com.example.globalStudents.global.util.JWTUtil;
@@ -22,12 +24,15 @@ public class SecurityConfig {
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
 
+    private final AuthenticationAccessDeniedHandler accessDeniedHandler;
+
     private final AuthenticationEntryPoint entryPoint;
 
     private final JWTUtil jwtUtil;
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, AuthenticationEntryPoint entryPoint, JWTUtil jwtUtil) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, AuthenticationAccessDeniedHandler accessDeniedHandler, AuthenticationEntryPoint entryPoint, JWTUtil jwtUtil) {
 
         this.authenticationConfiguration = authenticationConfiguration;
+        this.accessDeniedHandler = accessDeniedHandler;
         this.entryPoint = entryPoint;
         this.jwtUtil = jwtUtil;
     }
@@ -60,6 +65,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/error","/v3/**", "/swagger-ui/**","/auth/**","/user/**", "/boards/**").permitAll()
+                        .requestMatchers("admin/**").hasAuthority(UserRole.ADMIN.name())
                         .anyRequest().authenticated());
 
         http
@@ -69,7 +75,9 @@ public class SecurityConfig {
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http
-                .exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint));
+                .exceptionHandling()
+                .authenticationEntryPoint(entryPoint)
+                .accessDeniedHandler(accessDeniedHandler);
 
         http
                 .sessionManagement((session) -> session

@@ -20,7 +20,8 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class UserConverterImpl implements Converter <UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO>{
+
+public class UserConverterImpl implements UserConverter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> {
 
     private final CountryRepository countryRepository;
     private final UserRepository userRepository;

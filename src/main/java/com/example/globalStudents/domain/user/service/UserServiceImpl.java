@@ -1,6 +1,6 @@
 package com.example.globalStudents.domain.user.service;
 
-import com.example.globalStudents.domain.user.converter.Converter;
+import com.example.globalStudents.domain.user.converter.UserConverter;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.dto.UserResponseDTO;
 import com.example.globalStudents.domain.user.entity.TermsEntity;
@@ -9,14 +9,16 @@ import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.domain.user.repository.TermsRepository;
 import com.example.globalStudents.domain.user.repository.UserAgreeRepository;
 import com.example.globalStudents.domain.user.repository.UserRepository;
-import com.example.globalStudents.global.apiPayload.ApiResponse;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
+import com.example.globalStudents.global.util.JWTUtil;
 import com.example.globalStudents.global.util.RedisUtil;
 import com.univcert.api.UnivCert;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +31,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     final String key = "a28672dd-bb43-4601-a227-c5ce571d23e5";
-    private final Converter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> converter;
+    private final UserConverter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> converter;
     private final UserRepository userRepository;
     private final UserAgreeRepository userAgreeRepository;
     private  final TermsRepository termsRepository;
     private final MailService mailService;
     private final RedisUtil redisUtil;
+    private final JWTUtil jwtUtil;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO) {
@@ -178,6 +181,18 @@ public class UserServiceImpl implements UserService {
             throw new ExceptionHandler(ErrorStatus._INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    public void logout(HttpServletRequest request){
+        String accessToken = request.getHeader("Authorization");
+
+        accessToken = accessToken.split(" ")[1];
+
+        if(!redisUtil.existData(accessToken)){
+            redisUtil.setDataExpire(accessToken,"true",60*60*60L);
+        } else {
+            throw new ExceptionHandler(ErrorStatus.LOGGED_OUT);
+        }
     }
 
 
