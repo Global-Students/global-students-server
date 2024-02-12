@@ -62,10 +62,10 @@ public class UserServiceImpl implements UserService {
                     .build();
             userAgreeRepository.save(userAgreeEntity);
         }
-        if(joinDTO.getMarketing()){
+        if(joinDTO.getEvent()){
             UserAgreeEntity userAgreeEntity = UserAgreeEntity.builder()
                     .user(newEntity)
-                    .terms(termsRepository.findByName("marketing").get())
+                    .terms(termsRepository.findByName("event").get())
                     .createdAt(LocalDateTime.now())
                     .agree(true)
                     .build();
