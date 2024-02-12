@@ -1,9 +1,13 @@
 package com.example.globalStudents.domain.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
 
 public class UserResponseDTO {
 
@@ -71,5 +75,56 @@ public class UserResponseDTO {
     public static class UniversityEmailVerificationResultDTO{
         String university;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserDetailInfoResultDTO{
+        String uid;
+        String userId;
+        String name;
+        String nickname;
+        String birth;
+        String hostCountry;
+        String nationality;
+        String hostUniversity;
+        String homeUniversity;
+        String fileName;
+        String fileUrl;
+        String isVerified;
+        Integer countReport;
+        String createdAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AllUsersResultDTO{
+        List<UserDetailInfoResultDTO> userList;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LoginResultDTO{
+        String accessToken;
+        String refreshToken;
+        @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
+        Date expireAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RefreshResultDTO{
+        String accessToken;
+        @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
+        Date expireAt;
+    }
+
 
 }
