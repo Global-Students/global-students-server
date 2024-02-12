@@ -30,6 +30,11 @@ public class UserConverterImpl implements UserConverter<UserEntity,UserRequestDT
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     public UserEntity toEntity(UserRequestDTO.JoinDTO joinDTO){
 
+        UserStatus universityStatus = null;
+        if(joinDTO.getVerified()) {
+            universityStatus = UserStatus.VERIFIED;
+        } else universityStatus = UserStatus.UNVERIFIED;
+
         return UserEntity.builder()
                 .hostUniversity(universityRepository.findByName(joinDTO.getHostUniversity()).get())
                 .homeUniversity(universityRepository.findByName(joinDTO.getHostUniversity()).get())
@@ -41,13 +46,13 @@ public class UserConverterImpl implements UserConverter<UserEntity,UserRequestDT
                 .password(bCryptPasswordEncoder.encode(joinDTO.getPassword()))
                 .firstName(joinDTO.getFirstName())
                 .lastName(joinDTO.getLastName())
-                .birth(convertBirth("2000","3","2"))
+                .birth(convertBirth(joinDTO.getBirthYear(),joinDTO.getBirthMonth(),joinDTO.getBirthDate()))
                 .nickname(joinDTO.getNickname())
                 .status(UserStatus.REGISTERED)
                 .privacy(UserStatus.PUBLIC)
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .createdAt(LocalDateTime.now())
-                .universityVerified(joinDTO.getVerified())
+                .verification(universityStatus)
                 .build();
 
     }
