@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/find-password/reset")
-    public ApiResponse<String> verifyCode (
+    public ApiResponse<String> resetPassword (
             @RequestBody
             UserRequestDTO.ResetPasswordDTO resetPasswordDTO
     ) {
