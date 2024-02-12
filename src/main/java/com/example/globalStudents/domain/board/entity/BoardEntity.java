@@ -2,6 +2,8 @@ package com.example.globalStudents.domain.board.entity;
 
 import com.example.globalStudents.domain.board.enums.BoardStatus;
 import com.example.globalStudents.domain.board.enums.BoardType;
+import com.example.globalStudents.domain.user.entity.CountryEntity;
+import com.example.globalStudents.domain.user.entity.UniversityEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +36,14 @@ public class BoardEntity {
 
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private CountryEntity country;
+
+    @ManyToOne
+    @JoinColumn(name = "university_id")
+    private UniversityEntity university;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PostEntity> postList = new ArrayList<>();

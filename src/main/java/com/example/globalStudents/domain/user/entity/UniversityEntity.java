@@ -1,5 +1,6 @@
 package com.example.globalStudents.domain.user.entity;
 
+import com.example.globalStudents.domain.board.entity.BoardEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.apache.catalina.User;
@@ -26,6 +27,9 @@ public class UniversityEntity {
 
     @OneToMany(mappedBy = "homeUniversity", cascade = CascadeType.ALL)
     private List<UserEntity> HomeUserList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    private List<BoardEntity> UniversityBoardList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="region_id")
