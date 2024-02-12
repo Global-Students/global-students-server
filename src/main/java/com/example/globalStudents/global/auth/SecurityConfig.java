@@ -1,7 +1,7 @@
 package com.example.globalStudents.global.auth;
 
 import com.example.globalStudents.domain.board.repository.BoardRepository;
-import com.example.globalStudents.domain.user.enums.UserRole;
+import com.example.globalStudents.domain.user.repository.UserRepository;
 import com.example.globalStudents.global.auth.filter.AuthenticationAccessDeniedHandler;
 import com.example.globalStudents.global.auth.filter.JwtFilter;
 import com.example.globalStudents.global.auth.filter.LoginFilter;
@@ -88,10 +88,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated());
 
         http
-                .addFilterBefore(new JwtFilter(jwtUtil, redisUtil), LoginFilter.class);
+                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
         //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, objectMapper, boardRepository, redisUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .exceptionHandling()
