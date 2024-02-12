@@ -3,7 +3,6 @@ package com.example.globalStudents.domain.board.entity;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +26,9 @@ public class CommentEntity {
     @Column(columnDefinition = "TINYINT(1)")
     private Boolean isAnonymous;
 
-    @CreatedDate
+    @Column(nullable = false)
+    private Integer likes;
+
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
 
@@ -59,5 +60,9 @@ public class CommentEntity {
         }
         this.post = post;
         post.getCommentList().add(this);
+    }
+
+    public void incrementLikes() {
+        this.likes++;
     }
 }

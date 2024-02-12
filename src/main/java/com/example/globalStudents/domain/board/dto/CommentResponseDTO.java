@@ -14,4 +14,12 @@ public class CommentResponseDTO {
     public static class CreateCommentResultDTO {
         String commentId;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LikeCommentResultDTO {
+        String commentId;
+    }
 }

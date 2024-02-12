@@ -5,7 +5,6 @@ import com.example.globalStudents.domain.board.enums.ReportType;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -32,7 +31,6 @@ public class ReportEntity {
     @Column(columnDefinition = "VARCHAR(20)")
     private ReportStatus status;
 
-    @CreatedDate
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
 
