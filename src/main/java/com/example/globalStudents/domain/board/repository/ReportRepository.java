@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface ReportRepository extends JpaRepository<ReportEntity, Long> {
 
-    List<ReportEntity> findByUserAndComment(UserEntity user, CommentEntity comment);
+    List<ReportEntity> findByReportUserAndComment(UserEntity user, CommentEntity comment);
 
-    List<ReportEntity> findByUserAndPost(UserEntity user, PostEntity post);
+    List<ReportEntity> findByReportUserAndPost(UserEntity reportUser, PostEntity post);
 
     int countAllByReportedUser(UserEntity reportedUser);
 }
