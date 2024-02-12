@@ -79,13 +79,13 @@ public class ReportServiceImpl implements ReportService{
     }
 
     public void checkCommentReported(UserEntity user, CommentEntity comment) {
-        if (!reportRepository.findByUserAndComment(user, comment).isEmpty()) {
+        if (!reportRepository.findByReportUserAndComment(user, comment).isEmpty()) {
             throw new ExceptionHandler(ErrorStatus.REPORT_ALREADY_REPORTED);
         }
     }
 
     public void checkPostReported(UserEntity user, PostEntity post) {
-        if (!reportRepository.findByUserAndPost(user, post).isEmpty()) {
+        if (!reportRepository.findByReportUserAndPost(user, post).isEmpty()) {
             throw new ExceptionHandler(ErrorStatus.REPORT_ALREADY_REPORTED);
         }
     }

@@ -15,7 +15,8 @@ public class ReportConverter {
 
     public static ReportEntity toPostReport(ReportRequestDTO.CreateReportDTO request, UserEntity user, PostEntity post) {
         return ReportEntity.builder()
-                .user(user)
+                .reportUser(user)
+                .reportedUser(post.getUser())
                 .post(post)
                 .type(ReportType.POST)
                 .body(request.getBody())
@@ -26,7 +27,8 @@ public class ReportConverter {
 
     public static ReportEntity toCommentReport(ReportRequestDTO.CreateReportDTO request, UserEntity user, CommentEntity comment) {
         return ReportEntity.builder()
-                .user(user)
+                .reportUser(user)
+                .reportedUser(comment.getUser())
                 .comment(comment)
                 .type(ReportType.COMMENT)
                 .body(request.getBody())
