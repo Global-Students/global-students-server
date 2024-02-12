@@ -1,6 +1,6 @@
 package com.example.globalStudents.domain.user.service;
 
-import com.example.globalStudents.domain.user.converter.Converter;
+import com.example.globalStudents.domain.user.converter.UserConverter;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.dto.UserResponseDTO;
 import com.example.globalStudents.domain.user.entity.TermsEntity;
@@ -11,13 +11,18 @@ import com.example.globalStudents.domain.user.repository.UserAgreeRepository;
 import com.example.globalStudents.domain.user.repository.UserRepository;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
+import com.example.globalStudents.global.util.JWTUtil;
 import com.example.globalStudents.global.util.RedisUtil;
+import com.univcert.api.UnivCert;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -25,13 +30,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-    private final Converter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> converter;
+    final String key = "a28672dd-bb43-4601-a227-c5ce571d23e5";
+    private final UserConverter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> converter;
     private final UserRepository userRepository;
     private final UserAgreeRepository userAgreeRepository;
     private  final TermsRepository termsRepository;
     private final MailService mailService;
     private final RedisUtil redisUtil;
+    private final JWTUtil jwtUtil;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO) {
@@ -96,7 +102,7 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findByEmail(email).isPresent()){
             mailService.sendFindIdMail(email,userEntity.get().getUserId());
         } else {
-            throw new ExceptionHandler(ErrorStatus.EMAIL_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FIND_ID_EMAIL_NOT_FOUND);
         }
         return UserResponseDTO.FindIdResultDTO.builder()
                 .email(email)
@@ -109,7 +115,7 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findByEmail(email).isPresent()){
             mailService.sendFindPasswordMail(email);
         } else {
-            throw new ExceptionHandler(ErrorStatus.EMAIL_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_EMAIL_NOT_FOUND);
         }
         return UserResponseDTO.FindPasswordResultDTO.builder()
                 .email(email)
@@ -118,11 +124,11 @@ public class UserServiceImpl implements UserService {
 
     public UserResponseDTO.MailCodeVerificationResultDTO verifyEmailCode(String email, String code) {
         String codeFoundByEmail = redisUtil.getData(email);
-        if (codeFoundByEmail == null || !codeFoundByEmail.equals(code)) {
-            return UserResponseDTO.MailCodeVerificationResultDTO
-                    .builder()
-                    .verified(false)
-                    .build();
+
+        if(codeFoundByEmail == null) {
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_EXPIRED_CODE);
+        } else if (!codeFoundByEmail.equals(code)) {
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_INVALID_CODE);
         }
         return UserResponseDTO.MailCodeVerificationResultDTO
                 .builder()
@@ -139,10 +145,55 @@ public class UserServiceImpl implements UserService {
             updateEntity.setUpdatedAt(LocalDateTime.now());
             userRepository.save(updateEntity);
         } else {
-            throw new ExceptionHandler(ErrorStatus.EMAIL_NOT_FOUND);
+            throw new ExceptionHandler(ErrorStatus.FIND_PASSWORD_EMAIL_NOT_FOUND);
         }
     }
 
-    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @Override
+    public UserResponseDTO.UniversityEmailResultDTO certifyUniversity(String email, String university) {
+        try{
+            Boolean success = (Boolean) UnivCert.certify(key,email,university,false).get("success");
+            if(success){
+                return UserResponseDTO.UniversityEmailResultDTO.builder()
+                        .complete(true)
+                        .build();
+            } else {
+                throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
+            }
+        } catch (IOException e){
+            throw new ExceptionHandler(ErrorStatus._INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @Override
+    public UserResponseDTO.UniversityEmailVerificationResultDTO certifyCode(String email, String university, String code) {
+        try{
+            Boolean success = (Boolean) UnivCert.certifyCode(key,email,university,Integer.parseInt(code)).get("success");
+            if(success){
+                return UserResponseDTO.UniversityEmailVerificationResultDTO.builder()
+                        .university(university)
+                        .build();
+            }else{
+                throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
+            }
+        } catch (IOException e){
+            throw new ExceptionHandler(ErrorStatus._INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public void logout(HttpServletRequest request){
+        String accessToken = request.getHeader("Authorization");
+
+        accessToken = accessToken.split(" ")[1];
+
+        if(!redisUtil.existData(accessToken)){
+            redisUtil.setDataExpire(accessToken,"true",60*60*60L);
+        } else {
+            throw new ExceptionHandler(ErrorStatus.LOGGED_OUT);
+        }
+    }
+
 
 }

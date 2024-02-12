@@ -57,4 +57,19 @@ public class UserResponseDTO {
         Boolean verified;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UniversityEmailResultDTO{
+        Boolean complete;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UniversityEmailVerificationResultDTO{
+        String university;
+    }
+
 }
