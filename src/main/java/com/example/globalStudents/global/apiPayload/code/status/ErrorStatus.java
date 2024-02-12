@@ -35,9 +35,15 @@ public enum ErrorStatus implements BaseErrorCode {
     FIND_ID_EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "LOGIN400_2", "등록된 이메일이 존재하지 않습니다 - email이 등록되어 있지 않은 경우"),
     FIND_ID_EMAIL_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "LOGIN400_3", "잘못된 형식입니다 - email이 잘못된 형식인 경우"),
     LOGGED_OUT(HttpStatus.BAD_REQUEST, "LOGOUT400_1", "이미 로그아웃된 상태입니다"),
-    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN400_1", "만료된 토큰입니다"),
-    TOKEN_MALFUNCTION(HttpStatus.UNAUTHORIZED, "TOKEN400_2", "부적절한 토큰입니다"),
-    TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "TOKEN400_3", "토큰 에러"),
+
+    // Auth error
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN401_1", "만료된 토큰입니다"),
+    TOKEN_MALFUNCTION(HttpStatus.UNAUTHORIZED, "TOKEN401_2", "부적절한 토큰입니다"),
+    TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "TOKEN401_3", "토큰 에러"),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN401_4", "만료된 refresh 토큰입니다"),
+    COOKIE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "COOKIE400_1", "쿠키에 refresh 토큰이 없습니다"),
+    TOKEN_NOT_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN400_1", "유효한 토큰입니다"),
+
     // Chat error
     CHAT_NOT_FOUND(HttpStatus.BAD_REQUEST, "CHAT400_1", "채팅방을 불러올 수 없습니다. - 채팅방이 조회되지 않는 경우"),
     CHAT_MESSAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "CHAT400_2", "메세지를 입력하세요 - 빈 메세지를 전송하려할 때"),

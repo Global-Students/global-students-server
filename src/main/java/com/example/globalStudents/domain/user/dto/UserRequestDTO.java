@@ -13,7 +13,7 @@ public class UserRequestDTO {
     public static class JoinDTO{
         Boolean privacy;
         Boolean terms;
-        Boolean marketing;
+        Boolean event;
 
         String userId;
         String password;
