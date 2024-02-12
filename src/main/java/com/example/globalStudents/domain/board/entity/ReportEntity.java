@@ -35,8 +35,12 @@ public class ReportEntity {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @JoinColumn(name = "report_user_id")
+    private UserEntity reportUser;
+
+    @ManyToOne
+    @JoinColumn(name = "reported_user_id")
+    private UserEntity reportedUser;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -46,12 +50,20 @@ public class ReportEntity {
     @JoinColumn(name = "comment_id")
     private CommentEntity comment;
 
-    public void setUser(UserEntity user) {
-        if (this.user != null) {
-            this.user.getReportList().remove(this);
+    public void setReportUser(UserEntity user) {
+        if (this.reportUser != null) {
+            this.reportUser.getReportList().remove(this);
         }
-        this.user = user;
+        this.reportUser = user;
         user.getReportList().add(this);
+    }
+
+    public void setReportedUser(UserEntity user) {
+        if (this.reportedUser != null) {
+            this.reportedUser.getReportedList().remove(this);
+        }
+        this.reportedUser = user;
+        user.getReportedList().add(this);
     }
 
     public void setPost(PostEntity post) {

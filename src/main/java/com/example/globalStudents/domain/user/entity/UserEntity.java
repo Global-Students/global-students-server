@@ -50,9 +50,6 @@ public class UserEntity {
 
     private String email;
 
-    @Column(columnDefinition = "TINYINT(1)")
-    private Boolean universityVerified;
-
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
     private UserStatus namePrivacy;
@@ -80,6 +77,10 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
     private UserStatus privacy;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
+    private UserStatus verification;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
@@ -133,6 +134,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List <CommentLikeEntity> commentLikeList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reportUser", cascade = CascadeType.ALL)
     private List <ReportEntity> reportList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reportedUser", cascade = CascadeType.ALL)
+    private List <ReportEntity> reportedList = new ArrayList<>();
 }
