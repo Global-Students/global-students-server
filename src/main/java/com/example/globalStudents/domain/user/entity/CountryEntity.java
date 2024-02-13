@@ -1,5 +1,6 @@
 package com.example.globalStudents.domain.user.entity;
 
+import com.example.globalStudents.domain.board.entity.BoardEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,8 @@ public class CountryEntity {
 
     @OneToMany(mappedBy = "hostCountry", cascade = CascadeType.ALL)
     private List<UserEntity> HostCountryUserList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+    private List<BoardEntity> CountryBoardList = new ArrayList<>();
 
 }
