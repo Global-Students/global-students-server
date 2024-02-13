@@ -5,10 +5,7 @@ import com.example.globalStudents.domain.user.dto.UserResponseDTO;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -25,5 +22,25 @@ public class AdminUserController {
         UserResponseDTO.AllUsersResultDTO userList = adminUserService.getAllUsers(filtering_type);
 
         return ApiResponse.onSuccess(userList);
+    }
+
+    @PostMapping("/users/{user_id}/verification")
+    public ApiResponse<String> verifyUser(
+            @PathVariable
+            String user_id
+    ){
+        adminUserService.verifyUser(user_id);
+
+        return ApiResponse.onSuccess(" ");
+    }
+
+    @PostMapping("/users/{user_id}/ban")
+    public ApiResponse<UserResponseDTO.BanResultDTO> banUser(
+            @PathVariable
+            String user_id
+    ){
+        UserResponseDTO.BanResultDTO banResultDTO = adminUserService.banUser(user_id);
+
+        return ApiResponse.onSuccess(banResultDTO);
     }
 }
