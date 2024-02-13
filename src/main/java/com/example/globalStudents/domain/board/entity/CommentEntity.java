@@ -1,5 +1,6 @@
 package com.example.globalStudents.domain.board.entity;
 
+import com.example.globalStudents.domain.board.enums.CommentStatus;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,8 +30,15 @@ public class CommentEntity {
     @Column(nullable = false)
     private Integer likes;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
+    private CommentStatus status;
+
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
+
+    @Column(columnDefinition = "DATETIME(6)")
+    private LocalDateTime deletedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -60,6 +68,14 @@ public class CommentEntity {
         }
         this.post = post;
         post.getCommentList().add(this);
+    }
+
+    public void setStatus(CommentStatus status) {
+        this.status = status;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public void incrementLikes() {
