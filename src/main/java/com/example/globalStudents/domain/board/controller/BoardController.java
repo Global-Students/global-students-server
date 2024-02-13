@@ -5,14 +5,12 @@ import com.example.globalStudents.domain.board.converter.PostConverter;
 import com.example.globalStudents.domain.board.converter.ReportConverter;
 import com.example.globalStudents.domain.board.dto.*;
 import com.example.globalStudents.domain.board.entity.*;
-import com.example.globalStudents.domain.board.service.BoardService;
-import com.example.globalStudents.domain.board.service.CommentService;
-import com.example.globalStudents.domain.board.service.PostService;
-import com.example.globalStudents.domain.board.service.ReportService;
+import com.example.globalStudents.domain.board.service.*;
 import com.example.globalStudents.global.apiPayload.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +21,7 @@ public class BoardController {
     private final CommentService commentService;
     private final ReportService reportService;
     private final BoardService boardService;
+    private final PostImageService postImageService;
 
     //게시판 홈
     @GetMapping("/{board_id}")
@@ -106,6 +105,15 @@ public class BoardController {
         return ApiResponse.onSuccess(ReportConverter.toReportResultDTO(report));
     }
 
+    //게시글 이미지 업로드
+    @PostMapping("/post/upload-image")
+    public ApiResponse<PostImageResponseDTO.UploadPostImageResultDTO> uploadPostImage(
+            @RequestParam(value = "file") MultipartFile multipartFile
+            ) {
 
+        PostImageResponseDTO.UploadPostImageResultDTO postImageResultDTO = postImageService.uploadPostImage(multipartFile);
+
+        return ApiResponse.onSuccess(postImageResultDTO);
+    }
 
 }
