@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface AdminUserService {
     public UserResponseDTO.AllUsersResultDTO getAllUsers(String filtering_type);
+
+    public void verifyUser(String userId);
+
+    public UserResponseDTO.BanResultDTO banUser(String userId);
 }

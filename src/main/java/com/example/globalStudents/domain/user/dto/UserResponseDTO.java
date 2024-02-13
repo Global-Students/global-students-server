@@ -93,6 +93,7 @@ public class UserResponseDTO {
         String fileName;
         String fileUrl;
         String isVerified;
+        String isBanned;
         Integer countReport;
         String createdAt;
     }
@@ -124,6 +125,14 @@ public class UserResponseDTO {
         String accessToken;
         @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
         Date expireAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BanResultDTO{
+        boolean ban; // true는 정지 처리 false는 정지 풀림
     }
 
 

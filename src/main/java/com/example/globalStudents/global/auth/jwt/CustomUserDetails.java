@@ -1,6 +1,7 @@
 package com.example.globalStudents.global.auth.jwt;
 
 import com.example.globalStudents.domain.user.entity.UserEntity;
+import com.example.globalStudents.domain.user.enums.UserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -47,7 +48,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return userEntity.getStatus() != UserStatus.BANNED;
     }
 
     @Override

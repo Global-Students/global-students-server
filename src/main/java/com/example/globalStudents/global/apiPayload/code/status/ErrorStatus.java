@@ -43,6 +43,7 @@ public enum ErrorStatus implements BaseErrorCode {
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN401_4", "만료된 refresh 토큰입니다"),
     COOKIE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "COOKIE400_1", "쿠키에 refresh 토큰이 없습니다"),
     TOKEN_NOT_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN400_1", "유효한 토큰입니다"),
+    BANNED(HttpStatus.UNAUTHORIZED, "ACCOUNT400_1", "잠긴 계정입니다"),
 
     // Chat error
     CHAT_NOT_FOUND(HttpStatus.BAD_REQUEST, "CHAT400_1", "채팅방을 불러올 수 없습니다. - 채팅방이 조회되지 않는 경우"),

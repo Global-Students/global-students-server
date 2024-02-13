@@ -14,9 +14,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,6 +49,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.redisUtil = redisUtil;
         setFilterProcessesUrl("/auth/login");
     }
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -113,7 +112,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
-        setUnsuccessfulResponse(response);
+        setUnsuccessfulResponse(response,failed);
     }
     private void setSuccessResponse(HttpServletResponse response, String accessToken, String refreshToken, Date expireAt) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
@@ -132,11 +131,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
 
-    private void setUnsuccessfulResponse(HttpServletResponse response) throws IOException {
+    private void setUnsuccessfulResponse(HttpServletResponse response,AuthenticationException failed) throws IOException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.setContentType("application/json;charset=UTF-8");
         ObjectMapper mapper = new ObjectMapper();
-        String text = mapper.writeValueAsString(ApiResponse.onFailure(ErrorStatus.LOGIN_ERROR.getCode(),ErrorStatus.LOGIN_ERROR.getMessage()+" ",""));
+
+        String text;
+
+        // 잠긴 계정 처리
+        if(failed instanceof LockedException){
+            text = mapper.writeValueAsString(ApiResponse.onFailure(ErrorStatus.BANNED.getCode(),ErrorStatus.BANNED.getMessage()+" ",""));
+        } else {
+            text = mapper.writeValueAsString(ApiResponse.onFailure(ErrorStatus.LOGIN_ERROR.getCode(),ErrorStatus.LOGIN_ERROR.getMessage()+" ",""));
+        }
+
 
         response.getWriter().print(text);
     }
