@@ -30,6 +30,11 @@ public class AdminConverterImpl implements AdminConverter {
         List<UserImageEntity> imageList = userImageRepository.findByUserIdAndType(userEntity.getId(), ImageType.University);
         int countReport = reportRepository.countAllByReportedUser(userEntity);
 
+        String isBanned = UserStatus.REGISTERED.getDescription();
+        if(userEntity.getStatus()==UserStatus.BANNED){
+            isBanned = UserStatus.BANNED.getDescription();
+        }
+
         return UserResponseDTO.UserDetailInfoResultDTO.builder()
                 .uid(userEntity.getUid())
                 .userId(userEntity.getUserId())
@@ -41,9 +46,10 @@ public class AdminConverterImpl implements AdminConverter {
                 .hostUniversity(userEntity.getHostUniversity().getName())
                 .homeUniversity(userEntity.getHomeUniversity().getName())
                 .fileName(imageList.get(imageList.size() - 1).getImageName())
-                .fileName(imageList.get(imageList.size() - 1).getImageName())
+                .fileUrl(imageList.get(imageList.size() - 1).getImageUrl())
                 .isVerified(userEntity.getVerification().getDescription())
                 .countReport(countReport)
+                .isBanned(isBanned)
                 .createdAt(userEntity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
 
