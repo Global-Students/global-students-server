@@ -24,8 +24,8 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/logout")
-    public ApiResponse<String> logout(HttpServletRequest request) {
-        userService.logout(request);
+    public ApiResponse<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        userService.logout(request,response);
         return ApiResponse.onCreated("LOGOUT");
     }
 

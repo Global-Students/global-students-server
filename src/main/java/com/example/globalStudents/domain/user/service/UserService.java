@@ -30,7 +30,7 @@ public interface UserService {
 
     public UserResponseDTO.UniversityEmailVerificationResultDTO certifyCode(String email, String university, String code);
 
-    public void logout (HttpServletRequest request);
+    public void logout (HttpServletRequest request, HttpServletResponse response);
 
     public UserResponseDTO.RefreshResultDTO refresh(HttpServletRequest request, HttpServletResponse response);
 }
