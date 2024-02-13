@@ -3,13 +3,16 @@ package com.example.globalStudents.domain.user.service;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.dto.UserResponseDTO;
 import com.example.globalStudents.global.apiPayload.ApiResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 public interface UserService {
 
-    public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO);
+    public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO, MultipartFile multipartFile);
 
     public UserResponseDTO.CheckIdResultDTO checkId(String userId);
 
@@ -28,4 +31,6 @@ public interface UserService {
     public UserResponseDTO.UniversityEmailVerificationResultDTO certifyCode(String email, String university, String code);
 
     public void logout (HttpServletRequest request);
+
+    public UserResponseDTO.RefreshResultDTO refresh(HttpServletRequest request, HttpServletResponse response);
 }

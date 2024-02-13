@@ -15,15 +15,18 @@ import com.example.globalStudents.global.util.JWTUtil;
 import com.example.globalStudents.global.util.RedisUtil;
 import com.univcert.api.UnivCert;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -34,13 +37,13 @@ public class UserServiceImpl implements UserService {
     private final UserConverter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> converter;
     private final UserRepository userRepository;
     private final UserAgreeRepository userAgreeRepository;
-    private  final TermsRepository termsRepository;
+    private final TermsRepository termsRepository;
     private final MailService mailService;
     private final RedisUtil redisUtil;
-    private final JWTUtil jwtUtil;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JWTUtil jwtUtil;
     @Override
-    public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO) {
+    public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO, MultipartFile file) {
         var userEntity = converter.toEntity(joinDTO);
         var newEntity = userRepository.save(userEntity);
         if(joinDTO.getTerms()){
@@ -185,15 +188,78 @@ public class UserServiceImpl implements UserService {
 
     public void logout(HttpServletRequest request){
         String accessToken = request.getHeader("Authorization");
+        if (request.getCookies() != null) {
 
-        accessToken = accessToken.split(" ")[1];
+            accessToken =  accessToken.split(" ")[1];
 
-        if(!redisUtil.existData(accessToken)){
-            redisUtil.setDataExpire(accessToken,"true",60*60*60L);
-        } else {
-            throw new ExceptionHandler(ErrorStatus.LOGGED_OUT);
+            Optional<String> refreshToken = Arrays.stream(request.getCookies())
+                    .filter(cookie -> cookie.getName().equals("refreshToken"))
+                    .map(Cookie::getValue)
+                    .findFirst();
+
+
+            // 로그아웃된 경우: 1) 쿠키에 refreshToken 없음 2) redis key에 accessToken 없음 3) redis key에 refreshToken 없음
+            if (refreshToken.isPresent() && !redisUtil.existData(accessToken) && redisUtil.existData(refreshToken.get())) {
+                redisUtil.setDataExpire(accessToken, "true", 1000 * 60L);
+                redisUtil.deleteData(refreshToken.get());
+            } else {
+                throw new ExceptionHandler(ErrorStatus.LOGGED_OUT);
+            }
         }
+        throw new ExceptionHandler(ErrorStatus.COOKIE_NOT_FOUND);
+
     }
 
+    @Override
+    public UserResponseDTO.RefreshResultDTO refresh(HttpServletRequest request, HttpServletResponse response) {
+        String authorization = request.getHeader("Authorization");
+
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+
+            throw new ExceptionHandler(ErrorStatus.TOKEN_ERROR);
+
+        }
+
+        String token = authorization.split(" ")[1];
+
+        try{
+            jwtUtil.isExpired(token);
+        } catch(ExpiredJwtException e){
+
+            String claimRole = (String) e.getClaims().get("role");
+            String claimUserId = (String) e.getClaims().get("username");
+
+            if (request.getCookies() != null) {
+
+                Optional<String> refreshToken = Arrays.stream(request.getCookies())
+                        .filter(cookie -> cookie.getName().equals("refreshToken"))
+                        .map(Cookie::getValue)
+                        .findFirst();
+
+                if(refreshToken.isPresent()){
+
+                    String userId = redisUtil.getData(refreshToken.get());
+
+                    // refresh 조건: 1) redis key에 refreshToken 존재 2) 만료된 token의 id와 redis key인 refreshToken의 value가 일치
+                    if(userId != null && userId.equals(claimUserId)){
+                        String newToken = jwtUtil.createJwt(e.getClaims().getId(), claimRole, 1000 * 60L);
+                        Date expireDate = jwtUtil.getExpireDate(newToken);
+                        return UserResponseDTO.RefreshResultDTO.builder()
+                                .accessToken("Bearer "+newToken)
+                                .expireAt(expireDate)
+                                .build();
+
+                    } else {
+                        // refreshToken 만료 및 id 불일치
+                        throw new ExceptionHandler(ErrorStatus.REFRESH_TOKEN_EXPIRED);
+                    }
+                }
+            }
+            // 확인할 refreshToken 없음
+            throw new ExceptionHandler(ErrorStatus.COOKIE_NOT_FOUND);
+        }
+        // 아직 유효한 accessToken
+        throw new ExceptionHandler(ErrorStatus.TOKEN_NOT_EXPIRED);
+    }
 
 }

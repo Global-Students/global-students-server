@@ -45,4 +45,8 @@ public class JWTUtil {
                 .signWith(secretKey)
                 .compact();
     }
+
+    public Date getExpireDate(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration();
+    }
 }

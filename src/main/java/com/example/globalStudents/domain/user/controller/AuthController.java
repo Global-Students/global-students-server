@@ -11,8 +11,10 @@ import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionH
 import com.example.globalStudents.global.util.RedisUtil;
 import com.univcert.api.UnivCert;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,16 +29,16 @@ public class AuthController {
         return ApiResponse.onCreated("LOGOUT");
     }
 
-    @PostMapping("join/information")
+    @PostMapping("/join/information")
     public ApiResponse<UserResponseDTO.JoinResultDTO> join(
-            @RequestBody
-            UserRequestDTO.JoinDTO joinDTO
+            @RequestPart UserRequestDTO.JoinDTO joinDTO,
+            @RequestPart MultipartFile multipartFile
     ){
-        UserResponseDTO.JoinResultDTO user = userService.createUser(joinDTO);
+        UserResponseDTO.JoinResultDTO user = userService.createUser(joinDTO,multipartFile);
         return ApiResponse.onCreated(user);
     }
 
-    @GetMapping("join/check-id/{user_id}")
+    @GetMapping("/join/check-id/{user_id}")
     public ApiResponse<UserResponseDTO.CheckIdResultDTO> checkId(
             @PathVariable
             String user_id
@@ -45,7 +47,7 @@ public class AuthController {
         return ApiResponse.onSuccess(id);
     }
 
-    @GetMapping("join/check-nickname/{user_nickname}")
+    @GetMapping("/join/check-nickname/{user_nickname}")
     public ApiResponse<UserResponseDTO.CheckNicknameResultDTO> checkNickname(
             @PathVariable
             String user_nickname
@@ -54,7 +56,7 @@ public class AuthController {
         return ApiResponse.onSuccess(nickname);
     }
 
-    @PostMapping("join/university-verification")
+    @PostMapping("/join/university-verification/email")
     public ApiResponse<UserResponseDTO.UniversityEmailResultDTO> sendUniversityMail(
             @RequestBody
             UserRequestDTO.UniversityEmailDTO universityEmailDTO
@@ -63,13 +65,21 @@ public class AuthController {
         return ApiResponse.onCreated(universityEmailResult);
     }
 
-    @PostMapping("join/university-verification/code")
+    @PostMapping("/join/university-verification/email/code")
     public ApiResponse<UserResponseDTO.UniversityEmailVerificationResultDTO> checkUniversityCode(
             @RequestBody
             UserRequestDTO.UniversityEmailVerificationDTO universityEmailVerificationDTO
     ){
         UserResponseDTO.UniversityEmailVerificationResultDTO verificationResult = userService.certifyCode(universityEmailVerificationDTO.getEmail(), universityEmailVerificationDTO.getUniversity(), universityEmailVerificationDTO.getCode());
         return ApiResponse.onCreated(verificationResult);
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<UserResponseDTO.RefreshResultDTO> refresh(
+            HttpServletRequest request, HttpServletResponse response
+    ){
+        UserResponseDTO.RefreshResultDTO refreshResultDTO = userService.refresh(request,response);
+        return ApiResponse.onCreated(refreshResultDTO);
     }
 
 }
