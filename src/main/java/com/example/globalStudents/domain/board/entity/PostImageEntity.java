@@ -24,7 +24,6 @@ public class PostImageEntity {
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
-    @CreatedDate
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
 

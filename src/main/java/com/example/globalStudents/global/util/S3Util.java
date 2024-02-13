@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +37,16 @@ public class S3Util {
                 filePath = "user_image/";
                 break;
         }
+
+        if (file.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
+        }
+
         //파일 이름 생성
         String originalFileName = file.getOriginalFilename();
         int fileExtensionIndex = originalFileName.lastIndexOf(".");
         String fileExtension = originalFileName.substring(fileExtensionIndex);
-        String now = String.valueOf(System.currentTimeMillis());
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         String fileName = filePath + originalFileName.substring(0, fileExtensionIndex) + "_" + now + fileExtension;
 
         //metadata 설정
