@@ -107,6 +107,14 @@ public class PostEntity {
         this.updatedAt = updatedAt;
     }
 
+    public void setStatus(PostStatus status) {
+        this.status = status;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
     public void incrementView() {
         this.view++;
     }

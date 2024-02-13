@@ -2,6 +2,7 @@ package com.example.globalStudents.domain.board.converter;
 
 import com.example.globalStudents.domain.board.dto.BoardResponseDTO;
 import com.example.globalStudents.domain.board.entity.PostEntity;
+import com.example.globalStudents.domain.board.enums.CommentStatus;
 import org.springframework.data.domain.Page;
 
 import java.time.format.DateTimeFormatter;
@@ -51,7 +52,7 @@ public class BoardConverter {
     public static BoardResponseDTO.PostDTO toPostDTO(PostEntity post) {
         return BoardResponseDTO.PostDTO.builder()
                 .title(post.getTitle())
-                .numberOfComments(post.getCommentList().size())
+                .numberOfComments(post.getCommentList().stream().filter(comment -> comment.getStatus() == CommentStatus.ACTIVE).collect(Collectors.toList()).size())
                 .date(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .author((post.getIsAnonymous()) ? "익명" : post.getUid())
                 .likes(post.getLikes())

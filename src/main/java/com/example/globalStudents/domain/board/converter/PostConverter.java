@@ -3,6 +3,7 @@ package com.example.globalStudents.domain.board.converter;
 import com.example.globalStudents.domain.board.dto.PostRequestDTO;
 import com.example.globalStudents.domain.board.dto.PostResponseDTO;
 import com.example.globalStudents.domain.board.entity.*;
+import com.example.globalStudents.domain.board.enums.CommentStatus;
 import com.example.globalStudents.domain.board.enums.PostStatus;
 import com.example.globalStudents.domain.board.enums.UserPostReactionType;
 import com.example.globalStudents.domain.user.entity.UserEntity;
@@ -72,6 +73,7 @@ public class PostConverter {
 
     public static List<PostResponseDTO.CommentDTO> toPostCommentList(List<CommentEntity> commentList) {
         return commentList.stream()
+                .filter(comment -> comment.getStatus().equals(CommentStatus.ACTIVE))
                 .map(comment -> {
                     return PostResponseDTO.CommentDTO.builder()
                             .userId(comment.getUser().getUserId())
@@ -103,5 +105,36 @@ public class PostConverter {
                 .build();
     }
 
+    public static PostResponseDTO.GetPostResultDTO toAdminPostResult(PostEntity post) {
+        return PostResponseDTO.GetPostResultDTO.builder()
+                .postId(post.getId().toString())
+                .title(post.getTitle())
+                .date(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .userId(post.getUid())
+                .userNickname(post.getUser().getNickname())
+                .isAnonymous(post.getIsAnonymous())
+                .views(post.getView())
+                .images(toPostImageList(post.getPostImageList()))
+                .likes(post.getLikes())
+                .bookmarks(post.getBookmarks())
+                .content(post.getBody())
+                .comment(toAdmimPostCommentList(post.getCommentList()))
+                .build();
+    }
+
+    public static List<PostResponseDTO.CommentDTO> toAdmimPostCommentList(List<CommentEntity> commentList) {
+        return commentList.stream()
+                .map(comment -> {
+                    return PostResponseDTO.CommentDTO.builder()
+                            .userId(comment.getUser().getUserId())
+                            .nickname(comment.getUser().getNickname())
+                            .isAnonymous(comment.getIsAnonymous())
+                            .content(comment.getBody())
+                            .likes(comment.getLikes())
+                            .commentId(comment.getId().toString())
+                            .date(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                            .build();
+                }).collect(Collectors.toList());
+    }
 
 }

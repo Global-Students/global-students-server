@@ -4,6 +4,7 @@ import com.example.globalStudents.domain.board.dto.CommentRequestDTO;
 import com.example.globalStudents.domain.board.dto.CommentResponseDTO;
 import com.example.globalStudents.domain.board.entity.CommentEntity;
 import com.example.globalStudents.domain.board.entity.CommentLikeEntity;
+import com.example.globalStudents.domain.board.enums.CommentStatus;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class CommentConverter {
                 .body(request.getContent())
                 .isAnonymous(request.getIsAnonymous())
                 .likes(0)
+                .status(CommentStatus.ACTIVE)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

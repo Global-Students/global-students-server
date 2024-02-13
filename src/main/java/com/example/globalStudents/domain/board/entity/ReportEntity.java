@@ -1,5 +1,6 @@
 package com.example.globalStudents.domain.board.entity;
 
+import com.example.globalStudents.domain.board.enums.ReportHandleType;
 import com.example.globalStudents.domain.board.enums.ReportStatus;
 import com.example.globalStudents.domain.board.enums.ReportType;
 import com.example.globalStudents.domain.user.entity.UserEntity;
@@ -30,6 +31,10 @@ public class ReportEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
     private ReportStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)")
+    private ReportHandleType handleType;
 
     @Column(columnDefinition = "DATETIME(6)")
     private LocalDateTime createdAt;
@@ -80,5 +85,13 @@ public class ReportEntity {
         }
         this.comment = comment;
         comment.getReportList().add(this);
+    }
+
+    public void setHandleType(ReportHandleType handleType) {
+        this.handleType = handleType;
+    }
+
+    public void setStatus(ReportStatus status) {
+        this.status = status;
     }
 }

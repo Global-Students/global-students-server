@@ -5,6 +5,7 @@ import com.example.globalStudents.domain.board.dto.ReportResponseDTO;
 import com.example.globalStudents.domain.board.entity.CommentEntity;
 import com.example.globalStudents.domain.board.entity.PostEntity;
 import com.example.globalStudents.domain.board.entity.ReportEntity;
+import com.example.globalStudents.domain.board.enums.ReportHandleType;
 import com.example.globalStudents.domain.board.enums.ReportStatus;
 import com.example.globalStudents.domain.board.enums.ReportType;
 import com.example.globalStudents.domain.user.entity.UserEntity;
@@ -21,6 +22,7 @@ public class ReportConverter {
                 .type(ReportType.POST)
                 .body(request.getBody())
                 .status(ReportStatus.NOT_RECEIVED)
+                .handleType(ReportHandleType.NOT_HANDLED)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -33,6 +35,7 @@ public class ReportConverter {
                 .type(ReportType.COMMENT)
                 .body(request.getBody())
                 .status(ReportStatus.NOT_RECEIVED)
+                .handleType(ReportHandleType.NOT_HANDLED)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
