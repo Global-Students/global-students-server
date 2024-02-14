@@ -5,6 +5,8 @@ import com.example.globalStudents.domain.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @Entity
@@ -24,6 +26,8 @@ public class UserImageEntity {
     private String imageName;
 
     private String imageUrl;
+
+    private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private ImageType type;

@@ -31,8 +31,8 @@ public class AuthController {
 
     @PostMapping("/join/information")
     public ApiResponse<UserResponseDTO.JoinResultDTO> join(
-            @RequestPart UserRequestDTO.JoinDTO joinDTO,
-            @RequestPart MultipartFile multipartFile
+            @RequestPart(name = "join") UserRequestDTO.JoinDTO joinDTO,
+            @RequestPart(name = "file") MultipartFile multipartFile
     ){
         UserResponseDTO.JoinResultDTO user = userService.createUser(joinDTO,multipartFile);
         return ApiResponse.onCreated(user);
