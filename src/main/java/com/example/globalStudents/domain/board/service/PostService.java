@@ -1,17 +1,16 @@
 package com.example.globalStudents.domain.board.service;
 
 import com.example.globalStudents.domain.board.dto.PostRequestDTO;
-import com.example.globalStudents.domain.board.entity.PostEntity;
-import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
+import com.example.globalStudents.domain.board.dto.PostResponseDTO;
 
 public interface PostService {
 
-    public PostEntity writePost(PostRequestDTO.WritePostDTO request);
+    public PostResponseDTO.WritePostResultDTO writePost(PostRequestDTO.WritePostDTO request);
 
-    public PostEntity updatePost(PostRequestDTO.WritePostDTO request, Long postId);
+    public PostResponseDTO.WritePostResultDTO updatePost(PostRequestDTO.WritePostDTO request, Long postId);
 
-    public UserPostReactionEntity reactPost(PostRequestDTO.ReactPostDTO request);
+    public PostResponseDTO.ReactPostResultDTO reactPost(PostRequestDTO.ReactPostDTO request);
 
-    public PostEntity getPost(Long postId);
+    public PostResponseDTO.GetPostResultDTO getPost(Long postId);
 
 }
