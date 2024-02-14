@@ -1,5 +1,8 @@
 package com.example.globalStudents.domain.user.service;
 
+import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
+import com.example.globalStudents.domain.myPage.enums.ImageType;
+import com.example.globalStudents.domain.myPage.repository.UserImageRepository;
 import com.example.globalStudents.domain.user.converter.UserConverter;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.dto.UserResponseDTO;
@@ -13,6 +16,7 @@ import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
 import com.example.globalStudents.global.util.JWTUtil;
 import com.example.globalStudents.global.util.RedisUtil;
+import com.example.globalStudents.global.util.S3Util;
 import com.univcert.api.UnivCert;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
@@ -21,6 +25,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,6 +33,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
+
+import static com.example.globalStudents.global.enums.S3FileType.UNIV_AUTH;
 
 @Service
 @RequiredArgsConstructor
@@ -42,10 +49,29 @@ public class UserServiceImpl implements UserService {
     private final RedisUtil redisUtil;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
+    private final S3Util s3Util;
+    private final UserImageRepository userImageRepository;
+
     @Override
     public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO, MultipartFile file) {
         var userEntity = converter.toEntity(joinDTO);
         var newEntity = userRepository.save(userEntity);
+
+
+        if(!file.isEmpty()){
+            String fileName = s3Util.uploadFile(file,UNIV_AUTH);
+            String fileUrl = s3Util.getUrl(fileName);
+            var entity = UserImageEntity.builder()
+                    .user(newEntity)
+                    .imageName(fileName)
+                    .imageUrl(fileUrl)
+                    .type(ImageType.University)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            userImageRepository.save(entity);
+        }
+
+
         if(joinDTO.getTerms()){
             TermsEntity termsEntity = termsRepository.findByName("terms").get();
             UserAgreeEntity userAgreeEntity = UserAgreeEntity.builder()
