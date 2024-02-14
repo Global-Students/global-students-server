@@ -4,13 +4,16 @@ import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
 import com.example.globalStudents.domain.myPage.enums.ImageType;
 import com.example.globalStudents.domain.myPage.repository.UserImageRepository;
 import com.example.globalStudents.domain.user.converter.UserConverter;
+import com.example.globalStudents.domain.user.converter.UserInquiryConverter;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.dto.UserResponseDTO;
 import com.example.globalStudents.domain.user.entity.TermsEntity;
 import com.example.globalStudents.domain.user.entity.UserAgreeEntity;
 import com.example.globalStudents.domain.user.entity.UserEntity;
+import com.example.globalStudents.domain.user.entity.UserInquiryEntity;
 import com.example.globalStudents.domain.user.repository.TermsRepository;
 import com.example.globalStudents.domain.user.repository.UserAgreeRepository;
+import com.example.globalStudents.domain.user.repository.UserInquiryRepository;
 import com.example.globalStudents.domain.user.repository.UserRepository;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
@@ -51,6 +54,8 @@ public class UserServiceImpl implements UserService {
     private final JWTUtil jwtUtil;
     private final S3Util s3Util;
     private final UserImageRepository userImageRepository;
+    private final UserInquiryConverter<UserInquiryEntity, UserRequestDTO.SendInquiryDTO> userInquiryConverter;
+    private final UserInquiryRepository userInquiryRepository;
 
     @Override
     public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO, MultipartFile file) {
@@ -293,6 +298,12 @@ public class UserServiceImpl implements UserService {
         }
         // 아직 유효한 accessToken
         throw new ExceptionHandler(ErrorStatus.TOKEN_NOT_EXPIRED);
+    }
+
+    @Override
+    public void sendInquiry(Long userId, UserRequestDTO.SendInquiryDTO dto) {
+        UserInquiryEntity userInquiryEntity = userInquiryConverter.toEntity(dto, userId);
+        userInquiryRepository.save(userInquiryEntity);
     }
 
 }
