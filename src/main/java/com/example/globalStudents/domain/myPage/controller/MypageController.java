@@ -30,7 +30,7 @@ public class MypageController {
 
     private Long getCurrentUId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        String userId = authentication.getName();
         return mypageService.findUIdByUserId(userId);
     }
 
