@@ -166,4 +166,11 @@ public class MypageServiceImpl implements MypageService {
     public Page<UserPostReactionEntity> findBookmarkedPostsByUserId(Long userId, Pageable pageable) {
         return userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, pageable);
     }
+
+    @Override
+    public Long findUIdByUserId(String userId) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + userId));
+        return user.getId();
+    }
 }
