@@ -10,49 +10,74 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
 public class MypageController {
-    @Autowired
-    private MypageService mypageService;
 
-    @GetMapping("/{userId}")
-    public ApiResponse<MypageResponseDTO.MypageDTO> getMyPage(@PathVariable Long userId, @RequestBody MypageRequestDTO request) {
+    private final MypageService mypageService;
+
+    private Long getCurrentUId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+            return mypageService.findUIdByUserId(username);
+        } else {
+            throw new IllegalStateException("User not authenticated");
+        }
+    }
+
+    @GetMapping("/")
+    public ApiResponse<MypageResponseDTO.MypageDTO> getMyPage(MypageRequestDTO request) {
+        Long userId = getCurrentUId();
         MypageResponseDTO.MypageDTO response = mypageService.getMyPage(userId, request);
         return ApiResponse.onSuccess(response);
     }
-    @GetMapping("/info/{userId}")
-    public ApiResponse<MypageResponseDTO.MypageInfoDTO> getUserInfo(@PathVariable Long userId) {
+
+    @GetMapping("/info")
+    public ApiResponse<MypageResponseDTO.MypageInfoDTO> getUserInfo() {
+        Long userId = getCurrentUId();
         MypageResponseDTO.MypageInfoDTO response = mypageService.getUserInfo(userId);
         return ApiResponse.onSuccess(response);
     }
-    @GetMapping("/profile/{userId}")
-    public ApiResponse<MypageResponseDTO.MypageProfileDTO> getUserProfile(@PathVariable Long userId) {
+
+    @GetMapping("/profile")
+    public ApiResponse<MypageResponseDTO.MypageProfileDTO> getUserProfile() {
+        Long userId = getCurrentUId();
         MypageResponseDTO.MypageProfileDTO response = mypageService.getUserProfile(userId);
         return ApiResponse.onSuccess(response);
     }
-    @PatchMapping("/info/update/{userId}")
-    public ApiResponse<MypageRequestDTO.MypageInfoUpdateDTO> updateUserProfile(@PathVariable Long userId, @RequestBody MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
+
+    @PatchMapping("/info/update")
+    public ApiResponse<MypageRequestDTO.MypageInfoUpdateDTO> updateUserProfile(@RequestBody MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
+        Long userId = getCurrentUId();
         MypageRequestDTO.MypageInfoUpdateDTO response = mypageService.updateUserProfile(userId, requestDTO);
         return ApiResponse.onSuccess(response);
     }
-    @PatchMapping("/profile/update/{userId}")
-    public ApiResponse<MypageRequestDTO.MypageProfileUpdateDTO> updateProfilePrivacy(@PathVariable Long userId, @RequestBody MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
+
+    @PatchMapping("/profile/update")
+    public ApiResponse<MypageRequestDTO.MypageProfileUpdateDTO> updateProfilePrivacy(@RequestBody MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
+        Long userId = getCurrentUId();
         MypageRequestDTO.MypageProfileUpdateDTO response = mypageService.updateProfilePrivacy(userId, requestDTO);
         return ApiResponse.onSuccess(response);
     }
-    @GetMapping("/writepost/{userId}")
-    public ApiResponse<Page<PostEntity>> getWrittenPostsByUser(@PathVariable Long userId, Pageable pageable) {
+
+    @GetMapping("/writepost")
+    public ApiResponse<Page<PostEntity>> getWrittenPostsByUser(Pageable pageable) {
+        Long userId = getCurrentUId();
         Page<PostEntity> response = mypageService.findPostsByUserId(userId, pageable);
         return ApiResponse.onSuccess(response);
     }
-    @GetMapping("/favoritepost/{userId}")
-    public ApiResponse<Page<UserPostReactionEntity>> getFavoritePostsByUser(@PathVariable Long userId, Pageable pageable) {
+
+    @GetMapping("/favoritepost")
+    public ApiResponse<Page<UserPostReactionEntity>> getFavoritePostsByUser(Pageable pageable) {
+        Long userId = getCurrentUId();
         Page<UserPostReactionEntity> likes = mypageService.findBookmarkedPostsByUserId(userId, pageable);
         return ApiResponse.onSuccess(likes);
     }
-
 }

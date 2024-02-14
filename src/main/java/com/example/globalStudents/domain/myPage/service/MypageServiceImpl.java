@@ -41,6 +41,13 @@ public class MypageServiceImpl implements MypageService {
     private UserPostReactionRepository userPostReactionRepository;
 
     @Override
+    public Long findUIdByUserId(String userId) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + userId));
+        return user.getId();
+    }
+
+    @Override
     public MypageResponseDTO.MypageDTO getMyPage(Long userId, MypageRequestDTO request) {
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         // 사용자가 작성한 게시글 5개 조회
