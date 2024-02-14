@@ -2,6 +2,7 @@ package com.example.globalStudents.domain.board.service;
 
 import com.example.globalStudents.domain.board.converter.PostConverter;
 import com.example.globalStudents.domain.board.dto.PostRequestDTO;
+import com.example.globalStudents.domain.board.dto.PostResponseDTO;
 import com.example.globalStudents.domain.board.entity.BoardEntity;
 import com.example.globalStudents.domain.board.entity.PostEntity;
 import com.example.globalStudents.domain.board.entity.PostImageEntity;
@@ -36,13 +37,12 @@ public class PostServiceImpl implements PostService{
     private final UserPostReactionRepository userPostReactionRepository;
 
     @Override
-    public PostEntity writePost(PostRequestDTO.WritePostDTO request) {
+    public PostResponseDTO.WritePostResultDTO writePost(PostRequestDTO.WritePostDTO request) {
 
         //access token으로부터 userId or UserEntity 가져오는 코드 필요
         Long userId = 6L;
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus._UNAUTHORIZED));
-
 
         //board_id 확인
         Long boardId;
@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService{
 
         postImageMapping(request.getImage(), newPost);
 
-        return postRepository.save(newPost);
+        return PostConverter.toWritePostResultDTO(postRepository.save(newPost));
     }
 
     public void postImageMapping(List<PostRequestDTO.PostRequestImageDTO> requestImageList, PostEntity post) {
@@ -75,13 +75,12 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostEntity updatePost(PostRequestDTO.WritePostDTO request, Long postId) {
+    public PostResponseDTO.WritePostResultDTO updatePost(PostRequestDTO.WritePostDTO request, Long postId) {
         PostEntity post = postRepository.findById(postId)
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
 
         //update 가능한지 체크
         checkPostUpdateAvailable(post);
-
 
         Long boardId;
         try {
@@ -100,7 +99,7 @@ public class PostServiceImpl implements PostService{
         post.setUpdatedAt(LocalDateTime.now());
         postImageMapping(request.getImage(), post);
 
-        return postRepository.save(post);
+        return PostConverter.toWritePostResultDTO(postRepository.save(post));
     }
 
     public void checkPostUpdateAvailable(PostEntity post) {
@@ -112,16 +111,14 @@ public class PostServiceImpl implements PostService{
         if (!post.getUser().getId().equals(post.getUser().getId())) {
             throw new ExceptionHandler(ErrorStatus._UNAUTHORIZED);
         }
-
         //게시글 상태 확인
         if (post.getStatus().equals(PostStatus.DELETED)) {
             throw new ExceptionHandler(ErrorStatus._FORBIDDEN);
         }
-
     }
 
     @Override
-    public UserPostReactionEntity reactPost(PostRequestDTO.ReactPostDTO request) {
+    public PostResponseDTO.ReactPostResultDTO reactPost(PostRequestDTO.ReactPostDTO request) {
 
         //access token으로부터 userId or UserEntity 가져오는 코드 필요
         Long userId = 6L;
@@ -130,7 +127,6 @@ public class PostServiceImpl implements PostService{
 
         PostEntity post = postRepository.findById(Long.parseLong(request.getPostId()))
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
-
 
         UserPostReactionType postReactionType;
 
@@ -150,7 +146,7 @@ public class PostServiceImpl implements PostService{
 
         UserPostReactionEntity newPostReaction = PostConverter.toUserPostReaction(request, user, post);
 
-        return userPostReactionRepository.save(newPostReaction);
+        return PostConverter.toReactPostResultDTO(userPostReactionRepository.save(newPostReaction));
     }
 
     public void checkPostReacted(PostEntity post, UserEntity user, UserPostReactionType userPostReactionType) {
@@ -160,10 +156,9 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostEntity getPost(Long postId) {
+    public PostResponseDTO.GetPostResultDTO getPost(Long postId) {
         PostEntity post = postRepository.findById(postId)
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
-
 
         if (!post.getStatus().equals(PostStatus.ACTIVE)) {
             throw new ExceptionHandler(ErrorStatus.POST_NOT_FOUND);
@@ -171,8 +166,7 @@ public class PostServiceImpl implements PostService{
 
         post.incrementView();
 
-        return postRepository.save(post);
+        return PostConverter.toGetPostResult(postRepository.save(post));
     }
-
 
 }

@@ -2,6 +2,7 @@ package com.example.globalStudents.domain.board.service;
 
 import com.example.globalStudents.domain.board.converter.ReportConverter;
 import com.example.globalStudents.domain.board.dto.ReportRequestDTO;
+import com.example.globalStudents.domain.board.dto.ReportResponseDTO;
 import com.example.globalStudents.domain.board.entity.CommentEntity;
 import com.example.globalStudents.domain.board.entity.PostEntity;
 import com.example.globalStudents.domain.board.entity.ReportEntity;
@@ -28,12 +29,12 @@ public class ReportServiceImpl implements ReportService{
     private final UserRepository userRepository;
 
     @Override
-    public ReportEntity createReport(ReportRequestDTO.CreateReportDTO request) {
+    public ReportResponseDTO.ReportResultDTO createReport(ReportRequestDTO.CreateReportDTO request) {
         if (request.getType().equals("POST")) {
-            return createPostReport(request);
+            return ReportConverter.toReportResultDTO(createPostReport(request));
         }
         else if(request.getType().equals(("COMMENT"))){
-            return createCommentReport(request);
+            return ReportConverter.toReportResultDTO(createCommentReport(request));
         }
         else {
             throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
@@ -89,6 +90,5 @@ public class ReportServiceImpl implements ReportService{
             throw new ExceptionHandler(ErrorStatus.REPORT_ALREADY_REPORTED);
         }
     }
-
 
 }

@@ -1,10 +1,10 @@
 package com.example.globalStudents.domain.board.service;
 
 import com.example.globalStudents.domain.board.dto.ReportRequestDTO;
-import com.example.globalStudents.domain.board.entity.ReportEntity;
+import com.example.globalStudents.domain.board.dto.ReportResponseDTO;
 
 public interface ReportService {
 
-    public ReportEntity createReport(ReportRequestDTO.CreateReportDTO request);
+    public ReportResponseDTO.ReportResultDTO createReport(ReportRequestDTO.CreateReportDTO request);
 
 }

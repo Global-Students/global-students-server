@@ -2,8 +2,8 @@ package com.example.globalStudents.domain.board.service;
 
 import com.example.globalStudents.domain.board.converter.CommentConverter;
 import com.example.globalStudents.domain.board.dto.CommentRequestDTO;
+import com.example.globalStudents.domain.board.dto.CommentResponseDTO;
 import com.example.globalStudents.domain.board.entity.CommentEntity;
-import com.example.globalStudents.domain.board.entity.CommentLikeEntity;
 import com.example.globalStudents.domain.board.entity.PostEntity;
 import com.example.globalStudents.domain.board.repository.CommentLikeRepository;
 import com.example.globalStudents.domain.board.repository.CommentRepository;
@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService{
     private final PostRepository postRepository;
 
     @Override
-    public CommentEntity writeComment(CommentRequestDTO.CreateCommentDTO request) {
+    public CommentResponseDTO.CreateCommentResultDTO writeComment(CommentRequestDTO.CreateCommentDTO request) {
         //access token으로부터 userId or UserEntity 가져오는 코드 필요
         Long userId = 6L;
 
@@ -42,11 +42,11 @@ public class CommentServiceImpl implements CommentService{
         newComment.setUser(user);
         newComment.setPost(post);
 
-        return commentRepository.save(newComment);
+        return CommentConverter.toCreateCommentResultDTO(commentRepository.save(newComment));
     }
 
     @Override
-    public CommentLikeEntity likeComment(CommentRequestDTO.LikeCommentDTO request) {
+    public CommentResponseDTO.LikeCommentResultDTO likeComment(CommentRequestDTO.LikeCommentDTO request) {
         //access token으로부터 userId or UserEntity 가져오는 코드 필요
         Long userId = 6L;
 
@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService{
         //좋아요 증가
         comment.incrementLikes();
 
-        return commentLikeRepository.save(CommentConverter.toCommentLike(user, comment));
+        return CommentConverter.toLikeCommentResultDTO(commentLikeRepository.save(CommentConverter.toCommentLike(user, comment)));
     }
 
     public void checkCommentLiked(CommentEntity comment, UserEntity user) {
