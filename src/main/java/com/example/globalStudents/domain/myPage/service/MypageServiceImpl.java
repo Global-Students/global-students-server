@@ -168,6 +168,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long findUIdByUserId(String userId) {
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + userId));

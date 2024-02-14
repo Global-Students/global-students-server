@@ -30,12 +30,8 @@ public class MypageController {
 
     private Long getCurrentUId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-            return mypageService.findUIdByUserId(username);
-        } else {
-            throw new IllegalStateException("User not authenticated");
-        }
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        return mypageService.findUIdByUserId(userId);
     }
 
     @GetMapping("/mypage")
