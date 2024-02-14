@@ -83,7 +83,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/error", "/v3/**", "/swagger-ui/**", "/auth/**", "/user/**", "/refresh").permitAll()
+                        .requestMatchers("/", "/error", "/v3/**", "/swagger-ui/**", "/auth/**", "/user/**", "/refresh", "/health").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
