@@ -15,5 +15,5 @@ public interface MypageService {
     MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(Long userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO);
     Page<PostEntity> findPostsByUserId(Long userId, Pageable pageable);
     Page<UserPostReactionEntity> findBookmarkedPostsByUserId(Long userId, Pageable pageable);
-    Long findUIdByUserId(String userId);
+
 }
