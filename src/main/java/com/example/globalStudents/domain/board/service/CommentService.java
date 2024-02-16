@@ -5,8 +5,8 @@ import com.example.globalStudents.domain.board.dto.CommentResponseDTO;
 
 public interface CommentService {
 
-    public CommentResponseDTO.CreateCommentResultDTO writeComment(CommentRequestDTO.CreateCommentDTO request);
+    public CommentResponseDTO.CreateCommentResultDTO writeComment(CommentRequestDTO.CreateCommentDTO request, String userId);
 
-    public CommentResponseDTO.LikeCommentResultDTO likeComment(CommentRequestDTO.LikeCommentDTO request);
+    public CommentResponseDTO.LikeCommentResultDTO likeComment(CommentRequestDTO.LikeCommentDTO request, String userId);
 
 }

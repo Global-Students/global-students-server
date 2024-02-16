@@ -37,11 +37,9 @@ public class PostServiceImpl implements PostService{
     private final UserPostReactionRepository userPostReactionRepository;
 
     @Override
-    public PostResponseDTO.WritePostResultDTO writePost(PostRequestDTO.WritePostDTO request) {
+    public PostResponseDTO.WritePostResultDTO writePost(PostRequestDTO.WritePostDTO request, String userId) {
 
-        //access token으로부터 userId or UserEntity 가져오는 코드 필요
-        Long userId = 6L;
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus._UNAUTHORIZED));
 
         //board_id 확인
@@ -75,12 +73,12 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostResponseDTO.WritePostResultDTO updatePost(PostRequestDTO.WritePostDTO request, Long postId) {
+    public PostResponseDTO.WritePostResultDTO updatePost(PostRequestDTO.WritePostDTO request, Long postId, String userId) {
         PostEntity post = postRepository.findById(postId)
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
 
         //update 가능한지 체크
-        checkPostUpdateAvailable(post);
+        checkPostUpdateAvailable(post, userId);
 
         Long boardId;
         try {
@@ -102,10 +100,9 @@ public class PostServiceImpl implements PostService{
         return PostConverter.toWritePostResultDTO(postRepository.save(post));
     }
 
-    public void checkPostUpdateAvailable(PostEntity post) {
-        //access token으로부터 userId or UserEntity 가져오는 코드 필요
-        Long userId = 6L;
-        UserEntity user = userRepository.findById(userId).orElseThrow(()->new RuntimeException("User_Not_Found"));
+    public void checkPostUpdateAvailable(PostEntity post, String userId) {
+
+        UserEntity user = userRepository.findByUserId(userId).orElseThrow(()->new RuntimeException("User_Not_Found"));
 
         //게시글 작성자인지 확인
         if (!post.getUser().getId().equals(post.getUser().getId())) {
@@ -118,11 +115,9 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostResponseDTO.ReactPostResultDTO reactPost(PostRequestDTO.ReactPostDTO request) {
+    public PostResponseDTO.ReactPostResultDTO reactPost(PostRequestDTO.ReactPostDTO request, String userId) {
 
-        //access token으로부터 userId or UserEntity 가져오는 코드 필요
-        Long userId = 6L;
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus._UNAUTHORIZED));
 
         PostEntity post = postRepository.findById(Long.parseLong(request.getPostId()))
