@@ -27,7 +27,7 @@ public class AdminConverterImpl implements AdminConverter {
 
     public UserResponseDTO.UserDetailInfoResultDTO toResponse(UserEntity userEntity) {
 
-        List<UserImageEntity> imageList = userImageRepository.findByUserIdAndType(userEntity.getId(), ImageType.University);
+        List<UserImageEntity> imageList = userImageRepository.findByUser_UserIdAndType(userEntity.getUserId(), ImageType.University);
         int countReport = reportRepository.countAllByReportedUser(userEntity);
 
         String isBanned = UserStatus.REGISTERED.getDescription();
