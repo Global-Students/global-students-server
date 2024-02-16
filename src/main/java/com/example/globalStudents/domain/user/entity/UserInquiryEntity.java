@@ -29,6 +29,7 @@ public class UserInquiryEntity {
     @JoinColumn(name="inquiry_id", nullable = false)
     private InquiryEntity inquiry;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20)")
     private InquiryStatus status;
