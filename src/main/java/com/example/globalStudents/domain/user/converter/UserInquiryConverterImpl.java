@@ -1,15 +1,16 @@
 package com.example.globalStudents.domain.user.converter;
 
+import com.example.globalStudents.domain.footer.enums.InquiryStatus;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
-import com.example.globalStudents.domain.user.dto.UserResponseDTO;
-import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.domain.user.entity.UserInquiryEntity;
-import com.example.globalStudents.domain.user.repository.InquiryRepository;
+import com.example.globalStudents.domain.footer.repository.InquiryRepository;
 import com.example.globalStudents.domain.user.repository.UserRepository;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,8 @@ public class UserInquiryConverterImpl implements UserInquiryConverter<UserInquir
                 .inquiry(inquiryEntity.get())
                 .user(userEntity.get())
                 .body(dto.getBody())
+                .status(InquiryStatus.PROCESSING)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }
