@@ -42,15 +42,16 @@ public class MypageServiceImpl implements MypageService {
     private UserPostReactionRepository userPostReactionRepository;
 
     @Override
-    public MypageResponseDTO.MypageDTO getMyPage(String userId, MypageRequestDTO request) {
+    @Transactional
+    public MypageResponseDTO.MypageDTO getMyPage(String userId) {
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
         // 사용자가 작성한 게시글 5개 조회
         PageRequest writtenPageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
-        List<PostEntity> writtenPosts = postRepository.findByUserId(userId, writtenPageRequest).getContent();
+        List<PostEntity> writtenPosts = postRepository.findByUser_UserId(userId, writtenPageRequest).getContent();
         // 사용자가 좋아요한 게시물 5개 조회
         PageRequest favoritePageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
-        List<PostEntity> favoritePosts = userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
+        List<PostEntity> favoritePosts = userPostReactionRepository.findByUser_UserIdAndTyp(userId, UserPostReactionType.LIKE, favoritePageRequest)
                 .getContent()
                 .stream()
                 .map(UserPostReactionEntity::getPost)
@@ -74,6 +75,7 @@ public class MypageServiceImpl implements MypageService {
                 .build();
     }
     @Override
+    @Transactional
     public MypageResponseDTO.MypageInfoDTO getUserInfo(String userId) {
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
@@ -94,9 +96,10 @@ public class MypageServiceImpl implements MypageService {
                 .build();
     }
     @Override
+    @Transactional
     public MypageResponseDTO.MypageProfileDTO getUserProfile(String userId) {
         UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
 
         Optional<UserImageEntity> profileImage = userImageRepository.findByUser_UserIdAndType(userId, ImageType.Profile).stream().findFirst();
         // 배경 사진 조회
@@ -120,11 +123,10 @@ public class MypageServiceImpl implements MypageService {
 
     @Override
     @Transactional
-    public MypageRequestDTO.MypageInfoUpdateDTO updateUserProfile(String userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
+    public MypageRequestDTO.MypageInfoUpdateDTO updateUserInfo(String userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
         UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
 
-        // Update fields if they are not null and not empty
         if (requestDTO.getPassword() != null && !requestDTO.getPassword().isEmpty()) {
             user.setPassword(requestDTO.getPassword());
         }
@@ -150,7 +152,7 @@ public class MypageServiceImpl implements MypageService {
     @Transactional
     public MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(String userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
         UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
 
         user.setNamePrivacy(requestDTO.getNamePrivacy());
         user.setBirthPrivacy(requestDTO.getBirthPrivacy());
@@ -161,11 +163,13 @@ public class MypageServiceImpl implements MypageService {
         return requestDTO;
     }
     @Override
+    @Transactional
     public Page<PostEntity> findPostsByUserId(String userId, Pageable pageable) {
-        return postRepository.findByUserId(userId, pageable);
+        return postRepository.findByUser_UserId(userId, pageable);
     }
     @Override
+    @Transactional
     public Page<UserPostReactionEntity> findBookmarkedPostsByUserId(String userId, Pageable pageable) {
-        return userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, pageable);
+        return userPostReactionRepository.findByUser_UserIdAndTyp(userId, UserPostReactionType.LIKE, pageable);
     }
 }
