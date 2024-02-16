@@ -124,5 +124,13 @@ public class UserRequestDTO {
     public static class FindIdDTO{
         String email;
     }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SendInquiryDTO{
+        String type;
+        String body;
+    }
 
 }

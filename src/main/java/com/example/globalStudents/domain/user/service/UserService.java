@@ -33,4 +33,6 @@ public interface UserService {
     public void logout (HttpServletRequest request, HttpServletResponse response);
 
     public UserResponseDTO.RefreshResultDTO refresh(HttpServletRequest request, HttpServletResponse response);
+
+    public void sendInquiry(Long userId, UserRequestDTO.SendInquiryDTO dto);
 }
