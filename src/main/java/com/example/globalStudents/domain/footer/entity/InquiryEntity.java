@@ -1,11 +1,8 @@
-package com.example.globalStudents.domain.user.entity;
+package com.example.globalStudents.domain.footer.entity;
 
 import com.example.globalStudents.domain.board.entity.*;
 import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
-import com.example.globalStudents.domain.user.entity.TermsEntity;
-import com.example.globalStudents.domain.user.entity.UniversityEntity;
-import com.example.globalStudents.domain.user.entity.UserAgreeEntity;
-import com.example.globalStudents.domain.user.entity.UserEntity;
+import com.example.globalStudents.domain.user.entity.*;
 import com.example.globalStudents.domain.user.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.example.globalStudents.domain.user.controller;
+package com.example.globalStudents.domain.footer.controller;
 
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.repository.UserRepository;
