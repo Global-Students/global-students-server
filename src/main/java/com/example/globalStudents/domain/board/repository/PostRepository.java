@@ -11,9 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
-    Page<PostEntity> findByUserId(Long userId, Pageable pageable);
-    List<PostEntity> findFavoritesByUserId(Long userId);
-
+    Page<PostEntity> findByUserId(String userId, Pageable pageable);
     @Query("SELECT p FROM PostEntity p WHERE p.board = :board AND p.status != 'DELETED'")
     Page<PostEntity> findAllByBoard(BoardEntity board, PageRequest pageRequest);
 

@@ -12,6 +12,8 @@ import com.example.globalStudents.domain.myPage.enums.ImageType;
 import com.example.globalStudents.domain.myPage.repository.UserImageRepository;
 import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.domain.user.repository.UserRepository;
+import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
+import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,8 +42,9 @@ public class MypageServiceImpl implements MypageService {
     private UserPostReactionRepository userPostReactionRepository;
 
     @Override
-    public MypageResponseDTO.MypageDTO getMyPage(Long userId, MypageRequestDTO request) {
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public MypageResponseDTO.MypageDTO getMyPage(String userId, MypageRequestDTO request) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
         // 사용자가 작성한 게시글 5개 조회
         PageRequest writtenPageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
         List<PostEntity> writtenPosts = postRepository.findByUserId(userId, writtenPageRequest).getContent();
@@ -55,9 +57,9 @@ public class MypageServiceImpl implements MypageService {
                 .collect(Collectors.toList());
 
         // 프로필 사진 조회
-        Optional<UserImageEntity> profileImage = userImageRepository.findByUserIdAndType(userId, ImageType.Profile).stream().findFirst();
+        Optional<UserImageEntity> profileImage = userImageRepository.findByUser_UserIdAndType(userId, ImageType.Profile).stream().findFirst();
         // 배경 사진 조회
-        Optional<UserImageEntity> backgroundImage = userImageRepository.findByUserIdAndType(userId, ImageType.Background).stream().findFirst();
+        Optional<UserImageEntity> backgroundImage = userImageRepository.findByUser_UserIdAndType(userId, ImageType.Background).stream().findFirst();
 
         return MypageResponseDTO.MypageDTO.builder()
                 .nickname(user.getNickname())
@@ -72,9 +74,9 @@ public class MypageServiceImpl implements MypageService {
                 .build();
     }
     @Override
-    public MypageResponseDTO.MypageInfoDTO getUserInfo(Long userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    public MypageResponseDTO.MypageInfoDTO getUserInfo(String userId) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
 
         return MypageResponseDTO.MypageInfoDTO.builder()
                 .userId(user.getUserId())
@@ -92,13 +94,13 @@ public class MypageServiceImpl implements MypageService {
                 .build();
     }
     @Override
-    public MypageResponseDTO.MypageProfileDTO getUserProfile(Long userId) {
-        UserEntity user = userRepository.findById(userId)
+    public MypageResponseDTO.MypageProfileDTO getUserProfile(String userId) {
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        Optional<UserImageEntity> profileImage = userImageRepository.findByUserIdAndType(userId, ImageType.Profile).stream().findFirst();
+        Optional<UserImageEntity> profileImage = userImageRepository.findByUser_UserIdAndType(userId, ImageType.Profile).stream().findFirst();
         // 배경 사진 조회
-        Optional<UserImageEntity> backgroundImage = userImageRepository.findByUserIdAndType(userId, ImageType.Background).stream().findFirst();
+        Optional<UserImageEntity> backgroundImage = userImageRepository.findByUser_UserIdAndType(userId, ImageType.Background).stream().findFirst();
 
         return MypageResponseDTO.MypageProfileDTO.builder()
                 .nickname(user.getNickname())
@@ -118,8 +120,8 @@ public class MypageServiceImpl implements MypageService {
 
     @Override
     @Transactional
-    public MypageRequestDTO.MypageInfoUpdateDTO updateUserProfile(Long userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
-        UserEntity user = userRepository.findById(userId)
+    public MypageRequestDTO.MypageInfoUpdateDTO updateUserProfile(String userId, MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         // Update fields if they are not null and not empty
@@ -146,8 +148,8 @@ public class MypageServiceImpl implements MypageService {
     }
     @Override
     @Transactional
-    public MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(Long userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
-        UserEntity user = userRepository.findById(userId)
+    public MypageRequestDTO.MypageProfileUpdateDTO updateProfilePrivacy(String userId, MypageRequestDTO.MypageProfileUpdateDTO requestDTO) {
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         user.setNamePrivacy(requestDTO.getNamePrivacy());
@@ -159,19 +161,11 @@ public class MypageServiceImpl implements MypageService {
         return requestDTO;
     }
     @Override
-    public Page<PostEntity> findPostsByUserId(Long userId, Pageable pageable) {
+    public Page<PostEntity> findPostsByUserId(String userId, Pageable pageable) {
         return postRepository.findByUserId(userId, pageable);
     }
     @Override
-    public Page<UserPostReactionEntity> findBookmarkedPostsByUserId(Long userId, Pageable pageable) {
+    public Page<UserPostReactionEntity> findBookmarkedPostsByUserId(String userId, Pageable pageable) {
         return userPostReactionRepository.findByUserIdAndType(userId, UserPostReactionType.LIKE, pageable);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Long findUIdByUserId(String userId) {
-        UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with username: " + userId));
-        return user.getId();
     }
 }

@@ -22,7 +22,7 @@ public class UserImageServiceImpl implements UserImageService{
     private final S3Util s3Util;
 
     @Override
-    public UserImageResponseDTO.UploadUserImageResultDTO uploadUserImage(MultipartFile multipartFile, ImageType imageType, Long userId) {
+    public UserImageResponseDTO.UploadUserImageResultDTO uploadUserImage(MultipartFile multipartFile, ImageType imageType) {
         String fileName = s3Util.uploadFile(multipartFile, S3FileType.USER_IMAGE);
         String imageUrl = s3Util.getUrl(fileName);
 
