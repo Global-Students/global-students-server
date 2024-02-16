@@ -29,12 +29,12 @@ public class ReportServiceImpl implements ReportService{
     private final UserRepository userRepository;
 
     @Override
-    public ReportResponseDTO.ReportResultDTO createReport(ReportRequestDTO.CreateReportDTO request) {
+    public ReportResponseDTO.ReportResultDTO createReport(ReportRequestDTO.CreateReportDTO request, String userId) {
         if (request.getType().equals("POST")) {
-            return ReportConverter.toReportResultDTO(createPostReport(request));
+            return ReportConverter.toReportResultDTO(createPostReport(request, userId));
         }
         else if(request.getType().equals(("COMMENT"))){
-            return ReportConverter.toReportResultDTO(createCommentReport(request));
+            return ReportConverter.toReportResultDTO(createCommentReport(request, userId));
         }
         else {
             throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
@@ -42,14 +42,12 @@ public class ReportServiceImpl implements ReportService{
     }
 
 
-    public ReportEntity createPostReport(ReportRequestDTO.CreateReportDTO request) {
+    public ReportEntity createPostReport(ReportRequestDTO.CreateReportDTO request, String userId) {
 
         PostEntity post = postRepository.findById(Long.parseLong(request.getId()))
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
 
-        //access token으로부터 userId or UserEntity 가져오는 코드 필요
-        Long userId = 6L;
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus._UNAUTHORIZED));
 
         //중복 신고 확인
@@ -61,14 +59,12 @@ public class ReportServiceImpl implements ReportService{
     }
 
 
-    public ReportEntity createCommentReport(ReportRequestDTO.CreateReportDTO request) {
+    public ReportEntity createCommentReport(ReportRequestDTO.CreateReportDTO request, String userId) {
 
         CommentEntity comment = commentRepository.findById(Long.parseLong(request.getId()))
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.REPORT_COMMENT_ID_INVALID));
 
-        //access token으로부터 userId or UserEntity 가져오는 코드 필요
-        Long userId = 6L;
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus._UNAUTHORIZED));
 
         //중복 신고 확인

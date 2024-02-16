@@ -5,6 +5,8 @@ import com.example.globalStudents.domain.board.service.*;
 import com.example.globalStudents.global.apiPayload.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +50,7 @@ public class BoardController {
     public ApiResponse<PostResponseDTO.WritePostResultDTO> writePost(
             @RequestBody @Valid PostRequestDTO.WritePostDTO request) {
 
-        PostResponseDTO.WritePostResultDTO writePostResultDTO = postService.writePost(request);
+        PostResponseDTO.WritePostResultDTO writePostResultDTO = postService.writePost(request, getUserId());
 
         return ApiResponse.onCreated(writePostResultDTO);
     }
@@ -58,7 +60,7 @@ public class BoardController {
     public ApiResponse<PostResponseDTO.WritePostResultDTO> updatePost(
             @RequestBody @Valid PostRequestDTO.WritePostDTO request, @RequestParam(name = "id") Long postId) {
 
-        PostResponseDTO.WritePostResultDTO writePostResultDTO = postService.updatePost(request, postId);
+        PostResponseDTO.WritePostResultDTO writePostResultDTO = postService.updatePost(request, postId, getUserId());
 
         return ApiResponse.onSuccess(writePostResultDTO);
     }
@@ -67,7 +69,7 @@ public class BoardController {
     @PostMapping("/post/reaction")
     public ApiResponse<PostResponseDTO.ReactPostResultDTO> reactPost(@RequestBody @Valid PostRequestDTO.ReactPostDTO request) {
 
-        PostResponseDTO.ReactPostResultDTO reactPostResultDTO = postService.reactPost(request);
+        PostResponseDTO.ReactPostResultDTO reactPostResultDTO = postService.reactPost(request, getUserId());
 
         return ApiResponse.onSuccess(reactPostResultDTO);
     }
@@ -77,7 +79,7 @@ public class BoardController {
     public ApiResponse<CommentResponseDTO.CreateCommentResultDTO> writeComment(
             @RequestBody @Valid CommentRequestDTO.CreateCommentDTO request) {
 
-        CommentResponseDTO.CreateCommentResultDTO createCommentResultDTO = commentService.writeComment(request);
+        CommentResponseDTO.CreateCommentResultDTO createCommentResultDTO = commentService.writeComment(request, getUserId());
 
         return ApiResponse.onCreated(createCommentResultDTO);
     }
@@ -87,7 +89,7 @@ public class BoardController {
     public ApiResponse<CommentResponseDTO.LikeCommentResultDTO> likeComment(
             @RequestBody @Valid CommentRequestDTO.LikeCommentDTO request) {
 
-        CommentResponseDTO.LikeCommentResultDTO likeCommentResultDTO = commentService.likeComment(request);
+        CommentResponseDTO.LikeCommentResultDTO likeCommentResultDTO = commentService.likeComment(request, getUserId());
 
         return ApiResponse.onSuccess(likeCommentResultDTO);
     }
@@ -97,7 +99,7 @@ public class BoardController {
     public ApiResponse<ReportResponseDTO.ReportResultDTO> report(
             @RequestBody @Valid ReportRequestDTO.CreateReportDTO request) {
 
-        ReportResponseDTO.ReportResultDTO reportResultDTO = reportService.createReport(request);
+        ReportResponseDTO.ReportResultDTO reportResultDTO = reportService.createReport(request, getUserId());
 
         return ApiResponse.onSuccess(reportResultDTO);
     }
@@ -113,4 +115,9 @@ public class BoardController {
         return ApiResponse.onSuccess(postImageResultDTO);
     }
 
+
+    public String getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
 }

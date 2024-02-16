@@ -27,11 +27,9 @@ public class CommentServiceImpl implements CommentService{
     private final PostRepository postRepository;
 
     @Override
-    public CommentResponseDTO.CreateCommentResultDTO writeComment(CommentRequestDTO.CreateCommentDTO request) {
-        //access token으로부터 userId or UserEntity 가져오는 코드 필요
-        Long userId = 6L;
+    public CommentResponseDTO.CreateCommentResultDTO writeComment(CommentRequestDTO.CreateCommentDTO request, String userId) {
 
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
 
         PostEntity post = postRepository.findById(Long.parseLong(request.getPostId()))
@@ -46,11 +44,9 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentResponseDTO.LikeCommentResultDTO likeComment(CommentRequestDTO.LikeCommentDTO request) {
-        //access token으로부터 userId or UserEntity 가져오는 코드 필요
-        Long userId = 6L;
+    public CommentResponseDTO.LikeCommentResultDTO likeComment(CommentRequestDTO.LikeCommentDTO request, String userId) {
 
-        UserEntity user = userRepository.findById(userId)
+        UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
 
         CommentEntity comment = commentRepository.findById(Long.parseLong(request.getCommentId()))

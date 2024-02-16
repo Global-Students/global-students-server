@@ -5,6 +5,6 @@ import com.example.globalStudents.domain.board.dto.ReportResponseDTO;
 
 public interface ReportService {
 
-    public ReportResponseDTO.ReportResultDTO createReport(ReportRequestDTO.CreateReportDTO request);
+    public ReportResponseDTO.ReportResultDTO createReport(ReportRequestDTO.CreateReportDTO request, String userId);
 
 }
