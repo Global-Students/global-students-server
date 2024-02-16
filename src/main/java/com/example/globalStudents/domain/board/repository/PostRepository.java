@@ -8,10 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
-    Page<PostEntity> findByUserId(String userId, Pageable pageable);
+    Page<PostEntity> findByUser_UserId(String userId, Pageable pageable);
     @Query("SELECT p FROM PostEntity p WHERE p.board = :board AND p.status != 'DELETED'")
     Page<PostEntity> findAllByBoard(BoardEntity board, PageRequest pageRequest);
 

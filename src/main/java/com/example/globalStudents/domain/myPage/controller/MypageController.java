@@ -33,8 +33,8 @@ public class MypageController {
     }
 
     @GetMapping("")
-    public ApiResponse<MypageResponseDTO.MypageDTO> getMyPage(MypageRequestDTO request) {
-        MypageResponseDTO.MypageDTO myPageDTO = mypageService.getMyPage(getCurrentUserId(), request);
+    public ApiResponse<MypageResponseDTO.MypageDTO> getMyPage() {
+        MypageResponseDTO.MypageDTO myPageDTO = mypageService.getMyPage(getCurrentUserId());
         return ApiResponse.onSuccess(myPageDTO);
     }
 
@@ -52,7 +52,7 @@ public class MypageController {
 
     @PatchMapping("/info/update")
     public ApiResponse<MypageRequestDTO.MypageInfoUpdateDTO> updateUserProfile(@RequestBody MypageRequestDTO.MypageInfoUpdateDTO requestDTO) {
-        MypageRequestDTO.MypageInfoUpdateDTO updatedUserInfoDTO = mypageService.updateUserProfile(getCurrentUserId(), requestDTO);
+        MypageRequestDTO.MypageInfoUpdateDTO updatedUserInfoDTO = mypageService.updateUserInfo(getCurrentUserId(), requestDTO);
         return ApiResponse.onSuccess(updatedUserInfoDTO);
     }
 

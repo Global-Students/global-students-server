@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 public class MypageRequestDTO {
-    private Long userId;
-
     @Builder
     @Getter
     @NoArgsConstructor
