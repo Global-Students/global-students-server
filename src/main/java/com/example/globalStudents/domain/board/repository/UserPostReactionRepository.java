@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface UserPostReactionRepository extends JpaRepository<UserPostReactionEntity, UserPostReactionID> {
     @Query("SELECT upr FROM UserPostReactionEntity upr WHERE upr.user.id = :userId AND upr.type = :type")
-    Page<UserPostReactionEntity> findByUserIdAndType(@Param("userId") Long userId, @Param("type") UserPostReactionType type, Pageable pageable);
+    Page<UserPostReactionEntity> findByUserIdAndType(@Param("userId") String userId, @Param("type") UserPostReactionType type, Pageable pageable);
 
     List<UserPostReactionEntity> findByPostAndUserAndType(PostEntity post, UserEntity user, UserPostReactionType type);
 }

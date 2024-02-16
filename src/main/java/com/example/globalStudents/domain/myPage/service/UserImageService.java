@@ -5,5 +5,5 @@ import com.example.globalStudents.domain.myPage.enums.ImageType;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserImageService {
-    UserImageResponseDTO.UploadUserImageResultDTO uploadUserImage(MultipartFile multipartFile, ImageType imageType, Long userId);
+    UserImageResponseDTO.UploadUserImageResultDTO uploadUserImage(MultipartFile multipartFile, ImageType imageType);
 }
