@@ -74,7 +74,12 @@ public enum ErrorStatus implements BaseErrorCode {
     POST_ALREADY_REACTED(HttpStatus.BAD_REQUEST, "POST403_2", "이미 좋아요/즐겨찾기 한 게시글입니다 - 중복된 요청인 경우"),
 
     //Admin error
-    ADMIN_ALREADY_HANDLED_REPORT(HttpStatus.BAD_REQUEST, "ADMIN403_1", "이미 처리한 신고입니다 - 신고 처리를 이미 한 경우");
+    ADMIN_ALREADY_HANDLED_REPORT(HttpStatus.BAD_REQUEST, "ADMIN403_1", "이미 처리한 신고입니다 - 신고 처리를 이미 한 경우"),
+
+    //search error
+    SEARCH_UNIVERSITY_ISEMPTY(HttpStatus.NOT_FOUND,"SEARCH404_1","조회된 학교가 없습니다."),
+
+    SEARCH_TOTAL_ISEMPTY(HttpStatus.NOT_FOUND,"SEARCH404_2","조회된 검색 결과가 없습니다.");
 
 
 
