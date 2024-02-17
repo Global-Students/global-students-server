@@ -7,14 +7,8 @@ import com.example.globalStudents.domain.user.converter.UserConverter;
 import com.example.globalStudents.domain.user.converter.UserInquiryConverter;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.dto.UserResponseDTO;
-import com.example.globalStudents.domain.user.entity.TermsEntity;
-import com.example.globalStudents.domain.user.entity.UserAgreeEntity;
-import com.example.globalStudents.domain.user.entity.UserEntity;
-import com.example.globalStudents.domain.user.entity.UserInquiryEntity;
-import com.example.globalStudents.domain.user.repository.TermsRepository;
-import com.example.globalStudents.domain.user.repository.UserAgreeRepository;
-import com.example.globalStudents.domain.user.repository.UserInquiryRepository;
-import com.example.globalStudents.domain.user.repository.UserRepository;
+import com.example.globalStudents.domain.user.entity.*;
+import com.example.globalStudents.domain.user.repository.*;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
 import com.example.globalStudents.global.util.JWTUtil;
@@ -56,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final UserImageRepository userImageRepository;
     private final UserInquiryConverter<UserInquiryEntity, UserRequestDTO.SendInquiryDTO> userInquiryConverter;
     private final UserInquiryRepository userInquiryRepository;
+    private final UniversityRepository universityRepository;
 
     @Override
     public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO, MultipartFile file) {
@@ -186,7 +181,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO.UniversityEmailResultDTO certifyUniversity(String email, String university) {
         try{
-            Boolean success = (Boolean) UnivCert.certify(key,email,university,false).get("success");
+            UniversityEntity universityEntity = universityRepository.findByName(university)
+                    .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
+
+            Boolean success = (Boolean) UnivCert.certify(key,email,universityEntity.getKoreanName(),false).get("success");
+
             if(success){
                 return UserResponseDTO.UniversityEmailResultDTO.builder()
                         .complete(true)
