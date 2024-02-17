@@ -28,4 +28,9 @@ public class PostRequestDTO {
         String reactionType;
     }
 
+    @Getter
+    public static class DeletePostDTO {
+        String postId;
+    }
+
 }

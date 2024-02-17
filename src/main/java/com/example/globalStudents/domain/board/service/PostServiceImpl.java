@@ -164,4 +164,20 @@ public class PostServiceImpl implements PostService{
         return PostConverter.toGetPostResult(postRepository.save(post));
     }
 
+    @Override
+    public void deletePost(PostRequestDTO.DeletePostDTO request, String userId) {
+        Long postId = Long.parseLong(request.getPostId());
+
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.POST_NOT_FOUND));
+
+        //작성자 확인
+        if (!post.getUid().equals(userId)) {
+            throw new ExceptionHandler(ErrorStatus._UNAUTHORIZED);
+        }
+
+        post.setStatus(PostStatus.DELETED);
+        postRepository.save(post);
+    }
+
 }

@@ -13,4 +13,6 @@ public interface PostService {
 
     public PostResponseDTO.GetPostResultDTO getPost(Long postId);
 
+    public void deletePost(PostRequestDTO.DeletePostDTO request, String userId);
+
 }

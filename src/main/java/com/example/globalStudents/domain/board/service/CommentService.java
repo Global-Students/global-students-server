@@ -9,4 +9,6 @@ public interface CommentService {
 
     public CommentResponseDTO.LikeCommentResultDTO likeComment(CommentRequestDTO.LikeCommentDTO request, String userId);
 
+    public void deleteComment(CommentRequestDTO.DeleteCommentDTO request, String userId);
+
 }
