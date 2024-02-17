@@ -301,6 +301,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void sendInquiry(Long userId, UserRequestDTO.SendInquiryDTO dto) {
         UserInquiryEntity userInquiryEntity = userInquiryConverter.toEntity(dto, userId);
         userInquiryRepository.save(userInquiryEntity);

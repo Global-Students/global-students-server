@@ -51,7 +51,7 @@ public class MypageServiceImpl implements MypageService {
         List<PostEntity> writtenPosts = postRepository.findByUser_UserId(userId, writtenPageRequest).getContent();
         // 사용자가 좋아요한 게시물 5개 조회
         PageRequest favoritePageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
-        List<PostEntity> favoritePosts = userPostReactionRepository.findByUser_UserIdAndTyp(userId, UserPostReactionType.LIKE, favoritePageRequest)
+        List<PostEntity> favoritePosts = userPostReactionRepository.findByUser_UserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
                 .getContent()
                 .stream()
                 .map(UserPostReactionEntity::getPost)
@@ -170,6 +170,6 @@ public class MypageServiceImpl implements MypageService {
     @Override
     @Transactional
     public Page<UserPostReactionEntity> findBookmarkedPostsByUserId(String userId, Pageable pageable) {
-        return userPostReactionRepository.findByUser_UserIdAndTyp(userId, UserPostReactionType.LIKE, pageable);
+        return userPostReactionRepository.findByUser_UserIdAndType(userId, UserPostReactionType.LIKE, pageable);
     }
 }
