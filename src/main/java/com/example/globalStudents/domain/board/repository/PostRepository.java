@@ -24,4 +24,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     Page<PostEntity> findAllSearch(BoardEntity board, String keyword, PageRequest pageRequest);
 
     PostEntity findFirstByBoardOrderByCreatedAtDesc(BoardEntity board);
+
+    @Query("SELECT p FROM PostEntity p WHERE p.board = :board AND p.status != 'DELETED' ORDER BY p.likes DESC")
+    List<PostEntity> findTopPopularPosts(BoardEntity board, Pageable pageable);
 }
