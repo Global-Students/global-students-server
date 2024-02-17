@@ -15,4 +15,9 @@ public class CommentRequestDTO {
     public static class LikeCommentDTO {
         String commentId;
     }
+
+    @Getter
+    public static class DeleteCommentDTO {
+        String commentId;
+    }
 }

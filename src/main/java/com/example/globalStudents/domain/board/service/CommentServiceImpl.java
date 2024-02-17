@@ -5,6 +5,7 @@ import com.example.globalStudents.domain.board.dto.CommentRequestDTO;
 import com.example.globalStudents.domain.board.dto.CommentResponseDTO;
 import com.example.globalStudents.domain.board.entity.CommentEntity;
 import com.example.globalStudents.domain.board.entity.PostEntity;
+import com.example.globalStudents.domain.board.enums.CommentStatus;
 import com.example.globalStudents.domain.board.repository.CommentLikeRepository;
 import com.example.globalStudents.domain.board.repository.CommentRepository;
 import com.example.globalStudents.domain.board.repository.PostRepository;
@@ -64,5 +65,21 @@ public class CommentServiceImpl implements CommentService{
         if (!commentLikeRepository.findByCommentAndUser(comment, user).isEmpty()) {
             throw new ExceptionHandler(ErrorStatus.COMMENT_ALREADY_LIKED);
         }
+    }
+
+    @Override
+    public void deleteComment(CommentRequestDTO.DeleteCommentDTO request, String userId) {
+        Long commentId = Long.parseLong(request.getCommentId());
+
+        CommentEntity comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.COMMENT_COMMENT_ID_INVALID));
+
+        //작성자 확인
+        if (!comment.getUser().getUserId().equals(userId)) {
+            throw new ExceptionHandler(ErrorStatus._UNAUTHORIZED);
+        }
+
+        comment.setStatus(CommentStatus.DELETED);
+        commentRepository.save(comment);
     }
 }

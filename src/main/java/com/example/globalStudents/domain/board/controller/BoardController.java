@@ -115,6 +115,22 @@ public class BoardController {
         return ApiResponse.onSuccess(postImageResultDTO);
     }
 
+    @PutMapping("/post/delete")
+    public ApiResponse<String> deletePost(@RequestBody @Valid PostRequestDTO.DeletePostDTO request) {
+
+        postService.deletePost(request, getUserId());
+
+        return ApiResponse.onSuccess("");
+    }
+
+    @PutMapping("/post/comment/delete")
+    public ApiResponse<String> deleteComment(@RequestBody @Valid CommentRequestDTO.DeleteCommentDTO request) {
+
+        commentService.deleteComment(request, getUserId());
+
+        return ApiResponse.onSuccess("");
+    }
+
 
     public String getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
