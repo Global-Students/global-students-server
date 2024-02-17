@@ -23,7 +23,7 @@ spring:
             enable: true
 
   redis:
-    host: localhost
+    host: globalstudents-redis.0q8fma.ng.0001.apn2.cache.amazonaws.com
     port: 6379
 
   jwt:
