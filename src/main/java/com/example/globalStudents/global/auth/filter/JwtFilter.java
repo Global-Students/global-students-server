@@ -4,6 +4,7 @@ import com.example.globalStudents.domain.user.entity.UserEntity;
 import com.example.globalStudents.domain.user.enums.UserRole;
 import com.example.globalStudents.global.auth.jwt.CustomUserDetails;
 import com.example.globalStudents.global.util.JWTUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -46,9 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (jwtUtil.isExpired(token)) {
 
-                filterChain.doFilter(request, response);
-
-                return;
+                throw new JwtException("Expired Token");
             }
 
 
