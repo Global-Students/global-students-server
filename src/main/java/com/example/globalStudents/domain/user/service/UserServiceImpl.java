@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
             UniversityEntity universityEntity = universityRepository.findByName(university)
                     .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
 
-            Boolean success = (Boolean) UnivCert.certify(key,email,universityEntity.getKoreanName(),false).get("success");
+            Boolean success = (Boolean) UnivCert.certify(key,email,universityEntity.getKoreanName(),true).get("success");
 
             if(success){
                 return UserResponseDTO.UniversityEmailResultDTO.builder()
