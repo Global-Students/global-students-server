@@ -84,28 +84,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String username = customUserDetails.getUsername();
 
-        // TODO: 2024/02/13 로그인시 접근가능 게시판 반환
-//        Long universityId = customUserDetails.getHostUniversity();
-//        Long countryId = customUserDetails.getNationality();
-//
-//        Long universityBoardId = boardRepository.findByUniversityIdAndType(universityId, BoardType.UNIVERSITY).get();
-//        Long universityCountryBoardId = boardRepository.findByUniversityIdAndType(universityId, BoardType.COUNTRY).get();
-
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtil.createJwt(username, role, 1000 * 60L);
+        String accessToken = jwtUtil.createJwt(username, role, 1000 * 60 * 60L);
         String refreshToken = UUID.randomUUID().toString();
 
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setMaxAge(7 * 24 * 60 * 60);
-        response.addCookie(refreshCookie);
+//        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+//        refreshCookie.setMaxAge(7 * 24 * 60 * 60);
+//        response.addCookie(refreshCookie);
 
         Date expireAt = jwtUtil.getExpireDate(accessToken);
-        redisUtil.setDataExpire(refreshToken,username,7 * 24 * 60 * 60L);
+//        redisUtil.setDataExpire(refreshToken,username,7 * 24 * 60 * 60L);
 
         setSuccessResponse(response,accessToken,refreshToken,expireAt);
     }
