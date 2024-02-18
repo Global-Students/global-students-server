@@ -96,8 +96,10 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/error", "/v3/**", "/swagger-ui/**", "/auth/**", "/user/**", "/refresh", "/health").permitAll()
+                        .requestMatchers("/", "/error", "/v3/**", "/swagger-ui/**", "/auth/**", "/user/**", "/refresh", "/health","/search/university","/boards/{board_id}/posts/{post_id}","/boards/{board_id}").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/search/**","/friends/**","/boards/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers("/mypage/**").hasAnyRole("TEMP","ADMIN","USER")
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .anyRequest().authenticated());
 
