@@ -115,7 +115,7 @@ public class BoardController {
         return ApiResponse.onSuccess(postImageResultDTO);
     }
 
-    @PutMapping("/post/delete")
+    @PostMapping("/post/delete")
     public ApiResponse<String> deletePost(@RequestBody @Valid PostRequestDTO.DeletePostDTO request) {
 
         postService.deletePost(request, getUserId());
@@ -123,7 +123,7 @@ public class BoardController {
         return ApiResponse.onSuccess("");
     }
 
-    @PutMapping("/post/comment/delete")
+    @PostMapping("/post/comment/delete")
     public ApiResponse<String> deleteComment(@RequestBody @Valid CommentRequestDTO.DeleteCommentDTO request) {
 
         commentService.deleteComment(request, getUserId());
