@@ -1,6 +1,5 @@
 package com.example.globalStudents.domain.myPage.dto;
 
-import com.example.globalStudents.domain.board.entity.PostEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +18,8 @@ public class MypageResponseDTO {
         String host_university;
         String nationality;
         String major;
-        List<PostEntity> writtenPostList;
-        List<PostEntity> favoritePostList;
+        List<MypageResponseDTO.PostDTO> writtenPostList;
+        List<MypageResponseDTO.PostDTO> favoritePostList;
         Long profilePhotoId;
         Long backgroundPhotoId;
     }
@@ -61,5 +60,21 @@ public class MypageResponseDTO {
         String skill;
         Long profilePhotoId;
         Long backgroundPhotoId;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PostDTO {
+        String title;
+        int numberOfComments;
+        String date;
+        String author;
+        int likes;
+        int views;
+        Boolean hasImage;
+        String postId;
+        String boardId;
     }
 }

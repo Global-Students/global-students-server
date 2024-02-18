@@ -5,6 +5,7 @@ import com.example.globalStudents.domain.board.entity.UserPostReactionEntity;
 import com.example.globalStudents.domain.board.enums.UserPostReactionType;
 import com.example.globalStudents.domain.board.repository.PostRepository;
 import com.example.globalStudents.domain.board.repository.UserPostReactionRepository;
+import com.example.globalStudents.domain.myPage.converter.MypageConverter;
 import com.example.globalStudents.domain.myPage.dto.MypageRequestDTO;
 import com.example.globalStudents.domain.myPage.dto.MypageResponseDTO;
 import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
@@ -48,13 +49,24 @@ public class MypageServiceImpl implements MypageService {
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
         // 사용자가 작성한 게시글 5개 조회
         PageRequest writtenPageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
-        List<PostEntity> writtenPosts = postRepository.findByUser_UserId(userId, writtenPageRequest).getContent();
-        // 사용자가 좋아요한 게시물 5개 조회
-        PageRequest favoritePageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
-        List<PostEntity> favoritePosts = userPostReactionRepository.findByUser_UserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
+        List<MypageResponseDTO.PostDTO> writtenPosts = postRepository.findByUser_UserId(userId, writtenPageRequest)
                 .getContent()
                 .stream()
-                .map(UserPostReactionEntity::getPost)
+                .map(
+                        post -> {
+                            return MypageConverter.toPostDTO(post);
+                        }
+                ).collect(Collectors.toList());
+        // 사용자가 좋아요한 게시물 5개 조회
+        PageRequest favoritePageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
+        List<MypageResponseDTO.PostDTO> favoritePosts = userPostReactionRepository.findByUser_UserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
+                .getContent()
+                .stream()
+                .map(
+                        userPostReaction -> {
+                            return MypageConverter.toPostDTO(userPostReaction.getPost());
+                        }
+                )
                 .collect(Collectors.toList());
 
         // 프로필 사진 조회
