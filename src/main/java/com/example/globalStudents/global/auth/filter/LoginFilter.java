@@ -100,21 +100,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Date expireAt = jwtUtil.getExpireDate(accessToken);
 //        redisUtil.setDataExpire(refreshToken,username,7 * 24 * 60 * 60L);
 
-        setSuccessResponse(response,accessToken,refreshToken,expireAt);
+        setSuccessResponse(response,accessToken,username,expireAt);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         setUnsuccessfulResponse(response,failed);
     }
-    private void setSuccessResponse(HttpServletResponse response, String accessToken, String refreshToken, Date expireAt) throws IOException {
+    private void setSuccessResponse(HttpServletResponse response, String accessToken, String username, Date expireAt) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
         ObjectMapper mapper = new ObjectMapper();
 
         UserResponseDTO.LoginResultDTO loginResultDTO = UserResponseDTO.LoginResultDTO.builder()
                 .accessToken("Bearer "+accessToken)
-                .refreshToken(refreshToken)
+                .userId(username)
                 .expireAt(expireAt)
                 .build();
 
