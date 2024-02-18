@@ -4,7 +4,6 @@ import com.example.globalStudents.domain.board.converter.BoardConverter;
 import com.example.globalStudents.domain.board.dto.BoardResponseDTO;
 import com.example.globalStudents.domain.board.entity.BoardEntity;
 import com.example.globalStudents.domain.board.entity.PostEntity;
-import com.example.globalStudents.domain.board.enums.BoardType;
 import com.example.globalStudents.domain.board.repository.BoardRepository;
 import com.example.globalStudents.domain.board.repository.PostRepository;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
