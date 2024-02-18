@@ -22,6 +22,8 @@ public class UniversityEntity {
 
     private String name;
 
+    private String koreanName;
+
     @OneToMany(mappedBy = "hostUniversity", cascade = CascadeType.ALL)
     private List<UserEntity> GuestUserList = new ArrayList<>();
 

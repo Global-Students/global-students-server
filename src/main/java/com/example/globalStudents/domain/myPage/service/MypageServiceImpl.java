@@ -51,7 +51,7 @@ public class MypageServiceImpl implements MypageService {
         List<PostEntity> writtenPosts = postRepository.findByUser_UserId(userId, writtenPageRequest).getContent();
         // 사용자가 좋아요한 게시물 5개 조회
         PageRequest favoritePageRequest = PageRequest.of(0, 5); // 첫 번째 페이지의 5개 항목
-        List<PostEntity> favoritePosts = userPostReactionRepository.findByUser_UserIdAndTyp(userId, UserPostReactionType.LIKE, favoritePageRequest)
+        List<PostEntity> favoritePosts = userPostReactionRepository.findByUser_UserIdAndType(userId, UserPostReactionType.LIKE, favoritePageRequest)
                 .getContent()
                 .stream()
                 .map(UserPostReactionEntity::getPost)
@@ -65,8 +65,8 @@ public class MypageServiceImpl implements MypageService {
         return MypageResponseDTO.MypageDTO.builder()
                 .nickname(user.getNickname())
                 .introduction(user.getIntroduction())
-                .host_university(String.valueOf(user.getHostUniversity()))
-                .nationality(String.valueOf(user.getNationality()))
+                .host_university(user.getHostUniversity().getName())
+                .nationality(user.getNationality().getName())
                 .major(user.getMajor())
                 .writtenPostList(writtenPosts)
                 .favoritePostList(favoritePosts)
@@ -87,9 +87,9 @@ public class MypageServiceImpl implements MypageService {
                 .lastName(user.getLastName())
                 .birth(String.valueOf(user.getBirth()))
                 .nickname(user.getNickname())
-                .nationality(String.valueOf(user.getNationality()))
-                .hostCountry(String.valueOf(user.getHostCountry()))
-                .hostUniversity(String.valueOf(user.getHostUniversity()))
+                .nationality(user.getNationality().getName())
+                .hostCountry(user.getHostCountry().getName())
+                .hostUniversity(user.getHostUniversity().getName())
                 .major(user.getMajor())
                 .phone(user.getPhone())
                 .email(user.getEmail())
@@ -107,12 +107,12 @@ public class MypageServiceImpl implements MypageService {
 
         return MypageResponseDTO.MypageProfileDTO.builder()
                 .nickname(user.getNickname())
-                .nationality(String.valueOf(user.getNationality()))
+                .nationality(user.getNationality().getName())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .birth(user.getBirth().toString())
-                .hostCountry(String.valueOf(user.getHostCountry()))
-                .hostUniversity(String.valueOf(user.getHostUniversity()))
+                .hostCountry(user.getHostCountry().getName())
+                .hostUniversity(user.getHostUniversity().getName())
                 .major(user.getMajor())
                 .introduction(user.getIntroduction())
                 .skill(user.getSkill())
@@ -170,6 +170,6 @@ public class MypageServiceImpl implements MypageService {
     @Override
     @Transactional
     public Page<UserPostReactionEntity> findBookmarkedPostsByUserId(String userId, Pageable pageable) {
-        return userPostReactionRepository.findByUser_UserIdAndTyp(userId, UserPostReactionType.LIKE, pageable);
+        return userPostReactionRepository.findByUser_UserIdAndType(userId, UserPostReactionType.LIKE, pageable);
     }
 }

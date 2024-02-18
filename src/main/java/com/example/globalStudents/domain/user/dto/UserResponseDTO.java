@@ -135,5 +135,18 @@ public class UserResponseDTO {
         boolean ban; // true는 정지 처리 false는 정지 풀림
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BoardInformationDTO{
+        String boardName_1;
+        String boardName_2;
+        String boardName_3;
+        Long boardId_1;
+        Long boardId_2;
+        Long boardId_3;
+    }
+
 
 }

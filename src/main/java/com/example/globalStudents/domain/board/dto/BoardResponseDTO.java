@@ -13,6 +13,15 @@ public class BoardResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class BoardInfoDTO {
+        String boardName;
+        String detail;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class PageInfoDTO {
         int page;
         int size;
@@ -59,6 +68,7 @@ public class BoardResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BoardResultDTO {
+        BoardInfoDTO boardInfo;
         PageInfoDTO pageInfo;
         NoticePostDTO noticePost;
         List<PopularPostDTO> popular;

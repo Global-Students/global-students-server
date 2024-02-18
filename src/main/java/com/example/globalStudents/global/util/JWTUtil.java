@@ -32,7 +32,7 @@ public class JWTUtil {
 
     public Boolean isExpired(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date(System.currentTimeMillis() + 32400000));
     }
 
     public String createJwt(String username, String role, Long expiredMs) {
@@ -40,8 +40,8 @@ public class JWTUtil {
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .issuedAt(new Date(System.currentTimeMillis()+ 32400000))
+                .expiration(new Date(System.currentTimeMillis() + 32400000 + expiredMs))
                 .signWith(secretKey)
                 .compact();
     }

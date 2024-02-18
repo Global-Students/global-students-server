@@ -35,4 +35,6 @@ public interface UserService {
     public UserResponseDTO.RefreshResultDTO refresh(HttpServletRequest request, HttpServletResponse response);
 
     public void sendInquiry(Long userId, UserRequestDTO.SendInquiryDTO dto);
+
+    public UserResponseDTO.BoardInformationDTO getBoardInformation();
 }

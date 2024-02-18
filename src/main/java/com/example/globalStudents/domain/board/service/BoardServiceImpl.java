@@ -15,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,9 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public BoardResponseDTO.BoardResultDTO getBoardHome(Long boardId, String sortingType, int page, String keyword) {
+        // 공지 게시판 ID (임의 설정)
+        Long noticeBoardId = 1L;
+
         BoardEntity board = boardRepository.findById(boardId).orElseThrow(()->new ExceptionHandler(ErrorStatus.BOARD_BOARD_ID_INVALID));
 
         if (page < 0)
@@ -54,6 +59,28 @@ public class BoardServiceImpl implements BoardService{
             throw new ExceptionHandler(ErrorStatus._BAD_REQUEST);
         }
 
+        //게시판 설명
+        String boardDetail = "";
+
+        switch (board.getType()) {
+            case UNIVERSITY_ALL:
+                boardDetail = "우리학교에 재학중인 모든 유학생을 만날 수 있습니다.";
+                break;
+            case UNIVERSITY_COUNTRY:
+                boardDetail = "우리학교에 재학중인 같은 국적의 유학생을 만날 수 있습니다.";
+                break;
+            case ALL:
+                boardDetail = "유학국에서 공부하는 모든 유학생을 만날 수 있습니다.";
+                break;
+            case NOTICE:
+                boardDetail = "공지 게시판입니다.";
+        }
+
+        BoardResponseDTO.BoardInfoDTO boardInfo = BoardResponseDTO.BoardInfoDTO.builder()
+                .boardName(board.getName())
+                .detail(boardDetail)
+                .build();
+
         BoardResponseDTO.PageInfoDTO pageInfo = BoardResponseDTO.PageInfoDTO.builder()
                 .page(++page)
                 .size(10)
@@ -61,13 +88,13 @@ public class BoardServiceImpl implements BoardService{
                 .totalPost((int) postList.getTotalElements())
                 .build();
 
-        // 공지 게시판 ID (임의 설정)
-        Long noticeBoardId = 1L;
+
         BoardEntity noticeBoard = boardRepository.findById(noticeBoardId).orElseThrow(()->new RuntimeException("공지 게시판 NOT_FOUND"));
 
-        PostEntity noticePost = postRepository.findFirstByBoardOrderByCreatedAtDesc(board);
+        PostEntity noticePost = postRepository.findByBoardOrderByCreatedAtDesc(noticeBoard, PageRequest.of(0, 1));
 
         return BoardResponseDTO.BoardResultDTO.builder()
+                .boardInfo(boardInfo)
                 .pageInfo(pageInfo)
                 .noticePost(BoardConverter.toNoticePostDTO(noticePost))
                 .popular(BoardConverter.toPopularPostDTOList(getPopularPostList(board)))
@@ -76,9 +103,11 @@ public class BoardServiceImpl implements BoardService{
     }
 
     public Page<PostEntity> getPopularPostList(BoardEntity board) {
-        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "likes"));
 
-        return postRepository.findAllPopularPost(board, 1, pageRequest);
+        LocalDateTime aWeekAgo = LocalDateTime.now().minusWeeks(1);
+
+        return postRepository.findAllPopularPost(board, aWeekAgo, pageRequest);
     }
 
 }

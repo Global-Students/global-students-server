@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,8 @@ public class SearchService {
         String boardName = board.getName();
         PageRequest pageRequest = PageRequest.of(0, 5);
 
-        List<PostEntity> popularPostList = postRepository.findTopPopularPosts(board, pageRequest);
+        LocalDateTime minday = LocalDateTime.now().minusDays(7);
+        List<PostEntity> popularPostList = postRepository.findTopPopularPosts(board, minday,pageRequest);
 
         PopularPostSearchResponse response = searchConverter.toPopularPostResponse(popularPostList, boardName);
         return response;

@@ -1,5 +1,7 @@
 package com.example.globalStudents.domain.user.service;
 
+import com.example.globalStudents.domain.board.entity.BoardEntity;
+import com.example.globalStudents.domain.board.repository.BoardRepository;
 import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
 import com.example.globalStudents.domain.myPage.enums.ImageType;
 import com.example.globalStudents.domain.myPage.repository.UserImageRepository;
@@ -7,14 +9,8 @@ import com.example.globalStudents.domain.user.converter.UserConverter;
 import com.example.globalStudents.domain.user.converter.UserInquiryConverter;
 import com.example.globalStudents.domain.user.dto.UserRequestDTO;
 import com.example.globalStudents.domain.user.dto.UserResponseDTO;
-import com.example.globalStudents.domain.user.entity.TermsEntity;
-import com.example.globalStudents.domain.user.entity.UserAgreeEntity;
-import com.example.globalStudents.domain.user.entity.UserEntity;
-import com.example.globalStudents.domain.user.entity.UserInquiryEntity;
-import com.example.globalStudents.domain.user.repository.TermsRepository;
-import com.example.globalStudents.domain.user.repository.UserAgreeRepository;
-import com.example.globalStudents.domain.user.repository.UserInquiryRepository;
-import com.example.globalStudents.domain.user.repository.UserRepository;
+import com.example.globalStudents.domain.user.entity.*;
+import com.example.globalStudents.domain.user.repository.*;
 import com.example.globalStudents.global.apiPayload.code.status.ErrorStatus;
 import com.example.globalStudents.global.apiPayload.exception.handler.ExceptionHandler;
 import com.example.globalStudents.global.util.JWTUtil;
@@ -26,6 +22,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +54,8 @@ public class UserServiceImpl implements UserService {
     private final UserImageRepository userImageRepository;
     private final UserInquiryConverter<UserInquiryEntity, UserRequestDTO.SendInquiryDTO> userInquiryConverter;
     private final UserInquiryRepository userInquiryRepository;
+    private final UniversityRepository universityRepository;
+    private final BoardRepository boardRepository;
 
     @Override
     public UserResponseDTO.JoinResultDTO createUser(UserRequestDTO.JoinDTO joinDTO, MultipartFile file) {
@@ -186,7 +186,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO.UniversityEmailResultDTO certifyUniversity(String email, String university) {
         try{
-            Boolean success = (Boolean) UnivCert.certify(key,email,university,false).get("success");
+            UniversityEntity universityEntity = universityRepository.findByName(university)
+                    .orElseThrow(()-> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
+
+            Boolean success = (Boolean) UnivCert.certify(key,email,universityEntity.getKoreanName(),true).get("success");
+
             if(success){
                 return UserResponseDTO.UniversityEmailResultDTO.builder()
                         .complete(true)
@@ -301,9 +305,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void sendInquiry(Long userId, UserRequestDTO.SendInquiryDTO dto) {
         UserInquiryEntity userInquiryEntity = userInquiryConverter.toEntity(dto, userId);
         userInquiryRepository.save(userInquiryEntity);
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDTO.BoardInformationDTO getBoardInformation() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus._UNAUTHORIZED));
+
+        Long countryId = userEntity.getNationality().getId();
+        Long hostUniversityId = userEntity.getHostUniversity().getId();
+
+        BoardEntity board_1 = boardRepository.findByCountryIdAndUniversityId(32L,hostUniversityId)
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus.BOARD_NOT_FOUND));
+
+        BoardEntity board_2 = boardRepository.findByCountryIdAndUniversityId(countryId,hostUniversityId)
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus.BOARD_NOT_FOUND));
+
+        BoardEntity board_3 = boardRepository.findByCountryIdAndUniversityId(31L,31L)
+                .orElseThrow(()-> new ExceptionHandler(ErrorStatus.BOARD_NOT_FOUND));
+
+
+
+
+        return UserResponseDTO.BoardInformationDTO.builder()
+                .boardId_1(board_1.getId())
+                .boardId_2(board_2.getId())
+                .boardId_3(board_3.getId())
+                .boardName_1(board_1.getName())
+                .boardName_2(board_2.getName())
+                .boardName_3(board_3.getName())
+                .build();
     }
 
 }

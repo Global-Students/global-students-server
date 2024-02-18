@@ -1,6 +1,7 @@
 package com.example.globalStudents.domain.user.entity;
 
 import com.example.globalStudents.domain.board.entity.*;
+import com.example.globalStudents.domain.friends.entity.FriendEntity;
 import com.example.globalStudents.domain.myPage.entity.UserImageEntity;
 import com.example.globalStudents.domain.user.enums.UserRole;
 import com.example.globalStudents.domain.user.enums.UserStatus;
@@ -142,4 +143,10 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "reportedUser", cascade = CascadeType.ALL)
     private List <ReportEntity> reportedList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL)
+    private List<FriendEntity> fromFriend = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+    private List<FriendEntity> toFriend = new ArrayList<>();
 }
