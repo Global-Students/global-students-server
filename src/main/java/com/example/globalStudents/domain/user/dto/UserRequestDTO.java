@@ -29,6 +29,7 @@ public class UserRequestDTO {
         String homeUniversity;
         String hostUniversity;
 
+        String email;
         Boolean verified;
     }
 

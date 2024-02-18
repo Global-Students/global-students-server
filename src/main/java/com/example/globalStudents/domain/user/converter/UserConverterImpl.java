@@ -55,6 +55,7 @@ public class UserConverterImpl implements UserConverter<UserEntity,UserRequestDT
                 .privacy(UserStatus.PRIVATE)
                 .role(userRole)
                 .createdAt(LocalDateTime.now())
+                .email(joinDTO.getEmail())
                 .verification(universityStatus)
                 .build();
 
