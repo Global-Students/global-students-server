@@ -223,33 +223,35 @@ public class UserServiceImpl implements UserService {
 
     public void logout(HttpServletRequest request, HttpServletResponse response){
         String accessToken = request.getHeader("Authorization");
-        if (request.getCookies() != null) {
-
-            accessToken =  accessToken.split(" ")[1];
-
-            Optional<String> refreshToken = Arrays.stream(request.getCookies())
-                    .filter(cookie -> cookie.getName().equals("refreshToken"))
-                    .map(Cookie::getValue)
-                    .findFirst();
-
-
-            // 로그아웃된 경우: 1) 쿠키에 refreshToken 없음 2) redis key에 accessToken 없음 3) redis key에 refreshToken 없음
-            if (refreshToken.isPresent() && !redisUtil.existData(accessToken) && redisUtil.existData(refreshToken.get())) {
-                // accessToken 블랙 리스트 처리
-                redisUtil.setDataExpire(accessToken, "true", 1000 * 60L);
-                // redis에서 refreshToken 제거하여 더 이상 사용 불가 처리
-                redisUtil.deleteData(refreshToken.get());
-                // 쿠키에서 refreshToken 삭제하여 로그아웃 처리
-                Cookie delCookie = new Cookie("refreshToken", null);
-                delCookie.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
-                response.addCookie(delCookie);
-
-            }
-        } else {
-            // 쿠키가 없다면 로그아웃 상태
+        if(accessToken == null){
             throw new ExceptionHandler(ErrorStatus.LOGGED_OUT);
         }
-
+//        if (request.getCookies() != null) {
+//
+//            accessToken =  accessToken.split(" ")[1];
+//
+//            Optional<String> refreshToken = Arrays.stream(request.getCookies())
+//                    .filter(cookie -> cookie.getName().equals("refreshToken"))
+//                    .map(Cookie::getValue)
+//                    .findFirst();
+//
+//
+//            // 로그아웃된 경우: 1) 쿠키에 refreshToken 없음 2) redis key에 accessToken 없음 3) redis key에 refreshToken 없음
+//            if (refreshToken.isPresent() && !redisUtil.existData(accessToken) && redisUtil.existData(refreshToken.get())) {
+//                // accessToken 블랙 리스트 처리
+//                redisUtil.setDataExpire(accessToken, "true", 1000 * 60L);
+//                // redis에서 refreshToken 제거하여 더 이상 사용 불가 처리
+//                redisUtil.deleteData(refreshToken.get());
+//                // 쿠키에서 refreshToken 삭제하여 로그아웃 처리
+//                Cookie delCookie = new Cookie("refreshToken", null);
+//                delCookie.setMaxAge(0); // 쿠키의 expiration 타임을 0으로 하여 없앤다.
+//                response.addCookie(delCookie);
+//
+//            }
+//        } else {
+//            // 쿠키가 없다면 로그아웃 상태
+//            throw new ExceptionHandler(ErrorStatus.LOGGED_OUT);
+//        }
     }
 
     @Override
