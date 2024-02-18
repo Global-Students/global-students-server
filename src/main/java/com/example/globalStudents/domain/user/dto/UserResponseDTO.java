@@ -112,7 +112,7 @@ public class UserResponseDTO {
     @AllArgsConstructor
     public static class LoginResultDTO{
         String accessToken;
-        String refreshToken;
+        String userId;
         @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
         Date expireAt;
     }
