@@ -122,7 +122,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://feature-102-sign-up-api--ephemeral-belekoy-506c71.netlify.app","https://www.globalstudents.shop", "http://localhost:localhost:3000", "http://localhost:localhost:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("https://feature-102-sign-up-api--global-students.netlify.app", "https://global-students.netlify.app","https://www.globalstudents.shop", "http://localhost:localhost:3000", "http://localhost:localhost:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE", "OPTIONS" , "PUT"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("*"));
