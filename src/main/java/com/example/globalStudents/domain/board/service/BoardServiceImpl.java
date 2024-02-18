@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -90,7 +92,7 @@ public class BoardServiceImpl implements BoardService{
 
         BoardEntity noticeBoard = boardRepository.findById(noticeBoardId).orElseThrow(()->new RuntimeException("공지 게시판 NOT_FOUND"));
 
-        PostEntity noticePost = postRepository.findFirstByBoardOrderByCreatedAtDesc(noticeBoard);
+        PostEntity noticePost = postRepository.findByBoardOrderByCreatedAtDesc(noticeBoard, PageRequest.of(0, 1));
 
         return BoardResponseDTO.BoardResultDTO.builder()
                 .boardInfo(boardInfo)
@@ -102,9 +104,11 @@ public class BoardServiceImpl implements BoardService{
     }
 
     public Page<PostEntity> getPopularPostList(BoardEntity board) {
-        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "likes"));
 
-        return postRepository.findAllPopularPost(board, 1, pageRequest);
+        LocalDateTime aWeekAgo = LocalDateTime.now().minusWeeks(1);
+
+        return postRepository.findAllPopularPost(board, aWeekAgo, pageRequest);
     }
 
 }
