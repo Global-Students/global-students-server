@@ -22,6 +22,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,7 +42,8 @@ import static com.example.globalStudents.global.enums.S3FileType.UNIV_AUTH;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    final String key = "a28672dd-bb43-4601-a227-c5ce571d23e5";
+    @Value("${spring.univCert.key}")
+    private String key;
     private final UserConverter<UserEntity,UserRequestDTO.JoinDTO,UserResponseDTO.JoinResultDTO> converter;
     private final UserRepository userRepository;
     private final UserAgreeRepository userAgreeRepository;
