@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://globalstudents-db.cftlev9uds9u.ap-northeast-2.rds.amazonaws.com:3306/globalstudentsdb
-    username: root
-    password: globalstudents
+    url: ${RDS_DB_URL}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -12,8 +12,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: globalstudentsumc@gmail.com
-    password: qqwdwenysrmchgxp
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
 
     properties:
       mail:
@@ -23,21 +23,24 @@ spring:
             enable: true
 
   redis:
-    host: globalstudents-redis.0q8fma.ng.0001.apn2.cache.amazonaws.com
+    host: ${REDIS_HOST}
     port: 6379
 
   jwt:
-    secret: qwertyoasdfqwerldfkknjvldmocimdonivosfinvifnodocvifnoinoifdnovinodoi
+    secret: ${JWT_SECRET}
 
   cloud:
     aws:
       s3:
-        bucket: global-students
+        bucket: ${AWS_S3_BUCKETNAME}
       credentials:
-        access-key: AKIAWQTWEXHUJ5K5QLVP
-        secret-key: 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
+        access-key: ${AWS_S3_AK}
+        secret-key: ${AWS_S3_SK}
       region:
         static: ap-northeast-2
         auto: false
       stack:
         auto: false
+
+  univCert:
+    key: ${UNIV_KEY}
