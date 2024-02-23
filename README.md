@@ -1,4 +1,18 @@
-# Global Students Client
+# Global Students
+![표지](https://github.com/Global-Students/global-students-server/assets/5876849/a6155179-115f-4eee-8d60-3733e4b05f6a)
+
+![2](https://github.com/Global-Students/global-students-server/assets/5876849/d4ec83d6-db32-4dda-939b-3753c10f69b0)
+
+
+![3](https://github.com/Global-Students/global-students-server/assets/5876849/4e684a6e-ceed-43a7-b584-d3f3dfd2fa4f)
+
+![4](https://github.com/Global-Students/global-students-server/assets/5876849/b424249e-645e-4c31-8784-2cc0fcdf1c15)
+
+![4-0](https://github.com/Global-Students/global-students-server/assets/5876849/b552f260-d3c0-4b24-bee6-470c3a7b4df6)
+
+![4-1](https://github.com/Global-Students/global-students-server/assets/5876849/805f60ad-b1bf-4be8-b03e-2c51911fed09)
+
+![4-2-1](https://github.com/Global-Students/global-students-server/assets/5876849/38a9dab2-6eb2-47fb-94c6-9585f56628c1)
 
 UMC 5th \<Global Students 🌏>팀 서버 레포
 
@@ -6,34 +20,23 @@ UMC 5th \<Global Students 🌏>팀 서버 레포
 
 | 담당자 | 담당 내용 |
 | :----- | :-------- |
-| 김유성 |           |
-| 김진형 |           |
-| 유범수 |           |
-| 이윤주 |           |
+| 김유성 | 마이페이지, 친구 찾기 |
+| 김진형 | 게시판, 게시글, 관리자 페이지 |
+| 유범수 | 로그인, 회원가입, 푸터 문의, 관리자 페이지, 서버 배포|
+| 이윤주 | 채팅, 헤더 검색, 게시판, 게시글 보조|
 
 ## 💻 Development Environment
 
-- Spring
-- java (v.)
-
-<br>
-
-## 📖 Using Library
-
-| 라이브러리 | 사용 목적 | Management Tool |
-| :--------: | :-------: | :-------------: |
-|     @@     |    @@     |       @@        |
-|     @@     |    @@     |       @@        |
-|     @@     |    @@     |       @@        |
-
-<br>
-
-## 📂 Folder Architecture
-
-```jsx
-📁 src
-```
-
+- Spring Boot 3.2
+- JAVA 17
+- Redis 7
+- MYSQL 8.0.35
+- Gihub Action
+  
+- AWS Elastic Beanstalk
+- AWS S3
+- AWS RDS
+- AWS ElastiCache
 <br>
 
 ## 📌Git Convention
